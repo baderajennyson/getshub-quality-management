@@ -1,0 +1,14 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "GETSHub Database",
+        "Group": "GETSHub",
+        "Host": "postgres",
+        "Port": 5432,
+        "MaintenanceDB": "postgres",
+        "Username": "getshub_user",
+        "Password": "getshub_pass",
+        "SSLMode": "prefer"
+      }
+    }
+  }

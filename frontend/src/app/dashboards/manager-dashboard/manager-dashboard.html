@@ -1,0 +1,142 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>Manager Dashboard</h1>
+        <p>Welcome back, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</p>
+      </div>
+      <div class="header-right">
+        <button class="logout-btn" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <i class="fas fa-chart-bar"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ dashboardStats.totalProvisions }}</h3>
+        <p>Total Provisions</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon pending">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ dashboardStats.pendingAssignment }}</h3>
+        <p>Pending Assignment</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon assigned">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ dashboardStats.auditAssigned }}</h3>
+        <p>Audit Assigned</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon passed">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ dashboardStats.passed }}</h3>
+        <p>Passed</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon failed">
+        <i class="fas fa-times-circle"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ dashboardStats.failed }}</h3>
+        <p>Failed</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon backjobs">
+        <i class="fas fa-tools"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ dashboardStats.backjobs }}</h3>
+        <p>Backjobs</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="action-buttons">
+      <button class="action-btn upload">
+        <div class="action-icon">
+          <i class="fas fa-upload"></i>
+        </div>
+        <div class="action-content">
+          <h4>Upload Provisions</h4>
+          <p>Import new provision requests</p>
+        </div>
+      </button>
+
+      <button class="action-btn assign">
+        <div class="action-icon">
+          <i class="fas fa-user-check"></i>
+        </div>
+        <div class="action-content">
+          <h4>Assign Audits</h4>
+          <p>Assign audits to QA team</p>
+        </div>
+      </button>
+
+      <button class="action-btn reports">
+        <div class="action-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="action-content">
+          <h4>Generate Reports</h4>
+          <p>View analytics and reports</p>
+        </div>
+      </button>
+
+      <button class="action-btn manage">
+        <div class="action-icon">
+          <i class="fas fa-cog"></i>
+        </div>
+        <div class="action-content">
+          <h4>Manage Users</h4>
+          <p>User and system settings</p>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="recent-activity">
+    <h2>Recent Activity</h2>
+    <div class="activity-list">
+      <div class="activity-item" *ngFor="let activity of recentActivity">
+        <div class="activity-icon">
+          <i class="fas fa-circle" [class]="'activity-type-' + activity.type"></i>
+        </div>
+        <div class="activity-content">
+          <p>{{ activity.message }}</p>
+          <small>{{ activity.timestamp | date:'short' }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

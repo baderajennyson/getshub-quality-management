@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.*
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Uploads and temp files
+uploads/
+temp/
+
+# Database
+*.sqlite
+*.db

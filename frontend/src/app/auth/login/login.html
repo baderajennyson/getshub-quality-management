@@ -1,0 +1,42 @@
+<div class="login-container">
+    <div class="login-card">
+      <h1>GETSHub Login</h1>
+      <p>GETSHub - Quality Assurance System</p>
+      
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-field">
+          <label for="username">Username:</label>
+          <input 
+            id="username"
+            type="text" 
+            formControlName="username"
+            placeholder="Enter username">
+        </div>
+        
+        <div class="form-field">
+          <label for="password">Password:</label>
+          <input 
+            id="password"
+            type="password" 
+            formControlName="password"
+            placeholder="Enter password">
+        </div>
+        
+        <div class="error" *ngIf="error">{{ error }}</div>
+        
+        <button 
+          type="submit" 
+          [disabled]="loginForm.invalid || loading"
+          class="login-button">
+          {{ loading ? 'Logging in...' : 'Login' }}
+        </button>
+      </form>
+      
+      <div class="test-accounts">
+        <h3>Test Accounts:</h3>
+        <p><strong>Admin:</strong> admin / admin123</p>
+        <p><strong>Manager:</strong> manager1 / admin123</p>
+        <p><strong>Auditor:</strong> auditor1 / admin123</p>
+      </div>
+    </div>
+  </div>

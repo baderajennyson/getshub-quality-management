@@ -1,0 +1,83 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>QA Auditor Dashboard</h1>
+        <p>Welcome back, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</p>
+      </div>
+      <div class="header-right">
+        <button class="logout-btn" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon assigned">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ auditorStats.assignedAudits }}</h3>
+        <p>Assigned Audits</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon completed">
+        <i class="fas fa-check-double"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ auditorStats.completedToday }}</h3>
+        <p>Completed Today</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon pending">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ auditorStats.pendingAudits }}</h3>
+        <p>Pending Audits</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon rate">
+        <i class="fas fa-percentage"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ auditorStats.passRate }}%</h3>
+        <p>Pass Rate</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="action-buttons">
+      <button class="action-btn">
+        <div class="action-icon">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <div class="action-content">
+          <h4>My Audits</h4>
+          <p>View assigned audits</p>
+        </div>
+      </button>
+
+      <button class="action-btn">
+        <div class="action-icon">
+          <i class="fas fa-camera"></i>
+        </div>
+        <div class="action-content">
+          <h4>Start Inspection</h4>
+          <p>Begin quality inspection</p>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
