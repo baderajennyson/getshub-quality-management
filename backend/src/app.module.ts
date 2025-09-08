@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
+import { ProvisionsModule } from './provisions/provisions.module';
 
 @Module({
   imports: [
@@ -18,12 +19,13 @@ import { DatabaseModule } from './database/database.module';
       password: process.env.DB_PASSWORD || 'getshub_pass',
       database: process.env.DB_NAME || 'getshub_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: process.env.NODE_ENV === 'development',
+      synchronize: true, // Back to working state
       logging: false,
     }),
     AuthModule,
     UsersModule,
     DatabaseModule,
+    ProvisionsModule,
   ],
 })
 export class AppModule {}
