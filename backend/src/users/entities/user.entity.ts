@@ -29,7 +29,8 @@ export class User {
   @Column({
     type: 'varchar',
     enum: UserRole,
-    default: UserRole.QA_AUDITOR
+    default: UserRole.QA_AUDITOR,
+    nullable: true, // Added: make role nullable to handle seeding issues
   })
   role: UserRole;
 
