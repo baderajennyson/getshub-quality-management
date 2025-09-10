@@ -19,7 +19,7 @@ import { ProvisionsModule } from './provisions/provisions.module';
       password: process.env.DB_PASSWORD || 'getshub_pass',
       database: process.env.DB_NAME || 'getshub_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // Back to working state
+      synchronize: false, // Back to working state
       logging: false,
     }),
     AuthModule,
