@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { ProvisionsService } from '../../core/services/provisions.service';  // ADD THIS LINE
 
 @Component({
   selector: 'app-manager-dashboard',
@@ -23,7 +24,10 @@ export class ManagerDashboardComponent implements OnInit {
 
   recentActivity: any[] = [];
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private provisionsService: ProvisionsService  // ADD THIS LINE
+  ) {}
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
@@ -32,16 +36,30 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   loadDashboardStats() {
-    // TODO: Will connect to backend API in next step
-    // For now, show realistic placeholder data
-    this.dashboardStats = {
-      totalProvisions: 1247,
-      pendingAssignment: 23,
-      auditAssigned: 15,
-      passed: 1109,
-      failed: 45,
-      backjobs: 8
-    };
+    this.provisionsService.getStatistics().subscribe({
+      next: (stats) => {
+        this.dashboardStats = {
+          totalProvisions: stats.total,
+          pendingAssignment: stats.pendingAssignment,
+          auditAssigned: stats.auditAssigned,
+          passed: stats.passed,
+          failed: stats.failed,
+          backjobs: stats.backjobs
+        };
+      },
+      error: (error) => {
+        console.error('Failed to load dashboard statistics:', error);
+        // Keep placeholder data if API fails
+        this.dashboardStats = {
+          totalProvisions: 0,
+          pendingAssignment: 0,
+          auditAssigned: 0,
+          passed: 0,
+          failed: 0,
+          backjobs: 0
+        };
+      }
+    });
   }
 
   loadRecentActivity() {

@@ -1,75 +1,18 @@
-// frontend/src/app/core/services/provisions.service.ts
+// src/app/core/services/provisions.service.ts
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { 
+  Provision, 
+  CreateProvisionDto, 
+  UpdateProvisionDto,
+  ProvisionStatus,
+  ProvisionType 
+} from '../../shared/models/provision';
 
-export interface Provision {
-  id: string;
-  requestNumber: string;
-  customerName: string;
-  customerAddress: string;
-  contactNumber: string;
-  email?: string;
-  provisionType: 'NEW_CONNECTION' | 'RECONNECTION' | 'METER_CHANGE' | 'SERVICE_UPGRADE' | 'DISCONNECTION';
-  status: 'PENDING_ASSIGNMENT' | 'AUDIT_ASSIGNED' | 'AUDIT_IN_PROGRESS' | 'AUDIT_COMPLETED' | 'PASSED' | 'FAILED' | 'BACKJOB';
-  estimatedCost?: number;
-  description?: string;
-  technicalRequirements?: string;
-  requestedCompletionDate?: string;
-  actualCompletionDate?: string;
-  assignedAuditorId?: string;
-  assignedAuditor?: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-  uploadedById: string;
-  uploadedBy: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-  auditNotes?: string;
-  auditPhotos?: string;
-  qualityScore?: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface CreateProvisionDto {
-  customerName: string;
-  customerAddress: string;
-  contactNumber: string;
-  email?: string;
-  provisionType: Provision['provisionType'];
-  estimatedCost?: number;
-  description?: string;
-  technicalRequirements?: string;
-  requestedCompletionDate?: string;
-}
-
-export interface UpdateProvisionDto {
-  customerName?: string;
-  customerAddress?: string;
-  contactNumber?: string;
-  email?: string;
-  provisionType?: Provision['provisionType'];
-  status?: Provision['status'];
-  estimatedCost?: number;
-  description?: string;
-  technicalRequirements?: string;
-  requestedCompletionDate?: string;
-  actualCompletionDate?: string;
-  assignedAuditorId?: string;
-  auditNotes?: string;
-  auditPhotos?: string;
-  qualityScore?: number;
-}
-
+// Service-specific response interfaces
 export interface ProvisionsResponse {
   provisions: Provision[];
   total: number;
@@ -95,12 +38,12 @@ export class ProvisionsService {
 
   constructor(private http: HttpClient) {}
 
-  // Get all provisions with pagination and filtering
+  // Fixed method signature
   getProvisions(
     page: number = 1,
     limit: number = 10,
-    status?: Provision['status'],
     search?: string,
+    status?: ProvisionStatus,
     sortBy?: string,
     sortOrder?: 'asc' | 'desc'
   ): Observable<ProvisionsResponse> {
@@ -147,55 +90,13 @@ export class ProvisionsService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  // Bulk update provisions
-  bulkUpdateProvisions(ids: string[], updates: UpdateProvisionDto): Observable<Provision[]> {
-    return this.http.patch<Provision[]>(`${this.apiUrl}/bulk`, {
-      ids,
-      updates
-    });
-  }
-
-  // Bulk delete provisions
-  bulkDeleteProvisions(ids: string[]): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/bulk`, {
-      body: { ids }
-    });
-  }
-
-  // Assign auditor to provisions
-  assignAuditor(provisionIds: string[], auditorId: string): Observable<Provision[]> {
-    return this.http.patch<Provision[]>(`${this.apiUrl}/assign-auditor`, {
-      provisionIds,
-      auditorId
-    });
-  }
-
   // Get provisions statistics
   getStatistics(): Observable<ProvisionsStatistics> {
     return this.http.get<ProvisionsStatistics>(`${this.apiUrl}/statistics`);
   }
 
-  // Upload provisions from Excel/CSV
-  uploadProvisions(file: File): Observable<{
-    success: number;
-    failed: number;
-    errors: string[];
-  }> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.http.post<{
-      success: number;
-      failed: number;
-      errors: string[];
-    }>(`${this.apiUrl}/upload`, formData);
-  }
-
-  // Export provisions to Excel
-  exportProvisions(
-    filters?: any,
-    format: 'csv' | 'excel' = 'excel'
-  ): Observable<Blob> {
+  // Export provisions
+  exportProvisions(filters?: any, format: 'csv' | 'excel' = 'excel'): Observable<Blob> {
     let params = new HttpParams();
     
     if (filters) {
@@ -212,22 +113,5 @@ export class ProvisionsService {
       params,
       responseType: 'blob'
     });
-  }
-
-  // Get available QA auditors for assignment
-  getAvailableAuditors(): Observable<{
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    assignedCount: number;
-  }[]> {
-    return this.http.get<{
-      id: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      assignedCount: number;
-    }[]>(`${this.apiUrl}/available-auditors`);
   }
 }

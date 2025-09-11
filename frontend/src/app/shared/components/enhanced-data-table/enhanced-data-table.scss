@@ -1,0 +1,225 @@
+// src/app/shared/components/enhanced-data-table/enhanced-data-table.component.scss
+
+.enhanced-data-table {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+      flex-wrap: wrap;
+      gap: 16px;
+  
+      .search-section {
+        flex: 1;
+        min-width: 300px;
+  
+        .search-field {
+          width: 100%;
+          max-width: 400px;
+        }
+      }
+  
+      .actions-section {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+    }
+  
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px;
+      text-align: center;
+  
+      p {
+        margin-top: 16px;
+        color: #666;
+      }
+    }
+  
+    .table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+  
+      table {
+        width: 100%;
+        background: white;
+  
+        &.compact {
+          .mat-mdc-cell,
+          .mat-mdc-header-cell {
+            padding: 8px 16px;
+            font-size: 13px;
+          }
+        }
+  
+        &.comfortable {
+          .mat-mdc-cell,
+          .mat-mdc-header-cell {
+            padding: 20px 24px;
+          }
+        }
+  
+        &.striped .mat-mdc-row:nth-child(even) {
+          background-color: #f8f9fa;
+        }
+  
+        &.bordered {
+          border: 1px solid #e0e0e0;
+          
+          .mat-mdc-cell,
+          .mat-mdc-header-cell {
+            border-right: 1px solid #e0e0e0;
+            
+            &:last-child {
+              border-right: none;
+            }
+          }
+        }
+  
+        &.hoverable .mat-mdc-row:hover {
+          background-color: #f5f5f5;
+        }
+      }
+  
+      .mat-mdc-header-cell {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #2c3e50;
+        border-bottom: 2px solid #e9ecef;
+      }
+  
+      .mat-mdc-cell {
+        border-bottom: 1px solid #f0f0f0;
+      }
+  
+      .mat-mdc-row.selected {
+        background-color: #e3f2fd !important;
+      }
+  
+      // Status chips
+      .status-chip {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+  
+        &.status-pending {
+          background-color: #fff3e0;
+          color: #f57c00;
+        }
+  
+        &.status-assigned {
+          background-color: #e3f2fd;
+          color: #1976d2;
+        }
+  
+        &.status-in-progress {
+          background-color: #fbe9e7;
+          color: #d84315;
+        }
+  
+        &.status-completed {
+          background-color: #eceff1;
+          color: #455a64;
+        }
+  
+        &.status-passed {
+          background-color: #e8f5e8;
+          color: #2e7d32;
+        }
+  
+        &.status-failed {
+          background-color: #ffebee;
+          color: #c62828;
+        }
+  
+        &.status-backjob {
+          background-color: #f3e5f5;
+          color: #7b1fa2;
+        }
+  
+        &.status-default {
+          background-color: #f5f5f5;
+          color: #616161;
+        }
+      }
+    }
+  
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 32px;
+      text-align: center;
+      color: #666;
+  
+      .empty-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 16px;
+        color: #ccc;
+      }
+  
+      h3 {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+        font-weight: 500;
+      }
+  
+      p {
+        margin: 0;
+        color: #999;
+      }
+    }
+  
+    .mat-mdc-paginator {
+      border-top: 1px solid #e0e0e0;
+      background-color: #fafafa;
+    }
+  }
+  
+  // Responsive design
+  @media (max-width: 768px) {
+    .enhanced-data-table {
+      .table-header {
+        flex-direction: column;
+        align-items: stretch;
+  
+        .search-section {
+          min-width: auto;
+          
+          .search-field {
+            max-width: none;
+          }
+        }
+      }
+  
+      .table-container {
+        font-size: 14px;
+        
+        .mat-mdc-cell,
+        .mat-mdc-header-cell {
+          padding: 8px 12px;
+        }
+      }
+    }
+  }

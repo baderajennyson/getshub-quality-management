@@ -1,0 +1,139 @@
+<p>enhanced-data-table works!</p>
+<!-- src/app/shared/components/enhanced-data-table/enhanced-data-table.component.html -->
+
+<div class="enhanced-data-table">
+  
+    <!-- Search and Filters -->
+    <div class="table-header" *ngIf="config.showSearch || config.showFilters">
+      <div class="search-section" *ngIf="config.showSearch">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search provisions...</mat-label>
+          <input matInput 
+                 [value]="searchValue"
+                 (input)="onSearch($event)"
+                 placeholder="Search by customer name, request number...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+      
+      <div class="actions-section">
+        <button mat-raised-button color="primary" *ngIf="selection.selected.length > 0">
+          <mat-icon>assignment</mat-icon>
+          Bulk Assign ({{selection.selected.length}})
+        </button>
+      </div>
+    </div>
+  
+    <!-- Loading Spinner -->
+    <div class="loading-container" *ngIf="loading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>{{ config.loadingText || 'Loading...' }}</p>
+    </div>
+  
+    <!-- Data Table -->
+    <div class="table-container" *ngIf="!loading">
+      <table mat-table 
+             [dataSource]="dataSource" 
+             matSort 
+             (matSortChange)="onSort($event)"
+             [class]="config.density || 'standard'"
+             [class.striped]="config.striped"
+             [class.bordered]="config.bordered"
+             [class.hoverable]="config.hoverable">
+  
+        <!-- Selection Column -->
+        <ng-container matColumnDef="select" *ngIf="config.showSelection">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox 
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()"
+              (change)="masterToggle()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox 
+              [checked]="selection.isSelected(row)"
+              (change)="onRowSelect(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+  
+        <!-- Dynamic Columns -->
+        <ng-container *ngFor="let column of config.columns" [matColumnDef]="column.key">
+          <th mat-header-cell 
+            *matHeaderCellDef 
+            [mat-sort-header]="column.sortable !== false ? column.key : ''"
+            [style.width]="column.width">
+          {{ column.label }}
+          </th>
+          <td mat-cell *matCellDef="let row" [style.width]="column.width">
+            
+            <!-- Status Column -->
+            <span *ngIf="column.type === 'status'" 
+                  class="status-chip"
+                  [ngClass]="getStatusClass(row[column.key])">
+              {{ getColumnValue(row, column) }}
+            </span>
+            
+            <!-- Date Column -->
+            <span *ngIf="column.type === 'date'">
+              {{ row[column.key] | date:'short' }}
+            </span>
+            
+            <!-- Number Column -->
+            <span *ngIf="column.type === 'number'">
+              {{ row[column.key] | currency:'PHP':'symbol':'1.2-2' }}
+            </span>
+            
+            <!-- Default Text Column -->
+            <span *ngIf="!column.type || column.type === 'text'">
+              {{ getColumnValue(row, column) }}
+            </span>
+            
+          </td>
+        </ng-container>
+  
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions" *ngIf="config.showActions && actions.length > 0">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let row">
+            <button *ngFor="let action of actions"
+                    mat-icon-button
+                    [color]="action.color || 'primary'"
+                    [disabled]="action.disabled ? action.disabled(row) : false"
+                    [style.display]="action.visible && !action.visible(row) ? 'none' : 'inline-block'"
+                    [matTooltip]="action.label"
+                    (click)="onActionClick(action, row)">
+              <mat-icon>{{ action.icon || 'more_vert' }}</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+  
+        <!-- Table Rows -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            [class.selected]="selection.isSelected(row)">
+        </tr>
+        
+      </table>
+      
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="!loading && (!data || data.length === 0)">
+        <mat-icon class="empty-icon">{{ config.emptyStateIcon || 'inbox' }}</mat-icon>
+        <h3>{{ config.emptyStateText || 'No data available' }}</h3>
+        <p>There are no provisions to display.</p>
+      </div>
+      
+    </div>
+    
+    <!-- Pagination -->
+    <mat-paginator
+      *ngIf="config.showPagination !== false"
+      [pageSizeOptions]="config.pageSizeOptions || [10, 25, 50, 100]"
+      [pageSize]="config.pageSize || 10"
+      [length]="totalCount"
+      [showFirstLastButtons]="true"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+    
+  </div>
