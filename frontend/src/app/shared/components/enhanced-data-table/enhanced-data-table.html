@@ -1,26 +1,46 @@
-<p>enhanced-data-table works!</p>
-<!-- src/app/shared/components/enhanced-data-table/enhanced-data-table.component.html -->
-
 <div class="enhanced-data-table">
   
     <!-- Search and Filters -->
-    <div class="table-header" *ngIf="config.showSearch || config.showFilters">
+    <!-- Update the table header to include column controls -->
+    <div class="table-header" *ngIf="config.showSearch || config.showFilters || config.showColumnControls">
       <div class="search-section" *ngIf="config.showSearch">
         <mat-form-field appearance="outline" class="search-field">
           <mat-label>Search provisions...</mat-label>
           <input matInput 
-                 [value]="searchValue"
-                 (input)="onSearch($event)"
-                 placeholder="Search by customer name, request number...">
+                [value]="searchValue"
+                (input)="onSearch($event)"
+                placeholder="Search by customer name, request number...">
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </div>
       
-      <div class="actions-section">
-        <button mat-raised-button color="primary" *ngIf="selection.selected.length > 0">
-          <mat-icon>assignment</mat-icon>
-          Bulk Assign ({{selection.selected.length}})
-        </button>
+      <div class="controls-section">
+        <!-- Column Visibility Controls -->
+        <div class="column-controls" *ngIf="config.showColumnControls">
+          <button mat-icon-button 
+                  [matMenuTriggerFor]="columnMenu"
+                  matTooltip="Show/Hide Columns">
+            <mat-icon>view_column</mat-icon>
+          </button>
+          
+          <mat-menu #columnMenu="matMenu" class="column-menu">
+            <div mat-menu-item *ngFor="let column of config.columns" 
+                (click)="$event.stopPropagation()">
+              <mat-checkbox 
+                [checked]="columnVisibility[column.key]"
+                (change)="toggleColumn(column.key)">
+                {{ column.label }}
+              </mat-checkbox>
+            </div>
+          </mat-menu>
+        </div>
+        
+        <div class="bulk-actions-section">
+          <button mat-raised-button color="primary" *ngIf="selection.selected.length > 0">
+            <mat-icon>assignment</mat-icon>
+            Bulk Assign ({{selection.selected.length}})
+          </button>
+        </div>
       </div>
     </div>
   

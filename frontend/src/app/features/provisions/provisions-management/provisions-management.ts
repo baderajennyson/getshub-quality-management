@@ -11,8 +11,10 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { EnhancedDataTableComponent } from '../../../shared/components/enhanced-data-table/enhanced-data-table';
 import { ProvisionsService } from '../../../core/services/provisions.service';
-import { Provision, ProvisionStatus, ProvisionType } from '../../../shared/models/provision';
+import { Provision, ProvisionStatus, ProvisionType, CreateProvisionDto, UpdateProvisionDto } from '../../../shared/models/provision';
 import { ColumnConfig, TableConfig, TableAction } from '../../../shared/models/data-table.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ProvisionFormDialogComponent } from '../../../shared/dialogs/provision-form-dialog/provision-form-dialog';
 
 @Component({
   selector: 'app-provisions-management',
@@ -103,6 +105,7 @@ export class ProvisionsManagementComponent implements OnInit, OnDestroy {
     showSelection: true,
     showPagination: true,
     showActions: true,
+    showColumnControls: true,
     pageSize: 10,
     pageSizeOptions: [10, 25, 50, 100],
     striped: true,
@@ -145,7 +148,8 @@ export class ProvisionsManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private provisionsService: ProvisionsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -157,13 +161,17 @@ export class ProvisionsManagementComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  // Update loadProvisions to use search parameter
   loadProvisions() {
     this.loading = true;
     
     this.provisionsService.getProvisions(
       this.currentPage,
       this.pageSize,
-      this.searchQuery  // Fixed: search parameter in correct position
+      this.searchQuery, // This will now filter results
+      undefined, // status filter
+      undefined, // sortBy
+      undefined  // sortOrder
     ).pipe(
       takeUntil(this.destroy$)
     ).subscribe({
@@ -206,18 +214,52 @@ export class ProvisionsManagementComponent implements OnInit, OnDestroy {
 
   // Action handlers
   viewProvision(provision: Provision) {
-    console.log('View provision:', provision);
-    // TODO: Implement view details dialog
+    this.dialog.open(ProvisionFormDialogComponent, {
+      width: '800px',
+      data: { provision, mode: 'view' }
+    });
   }
 
   editProvision(provision: Provision) {
-    console.log('Edit provision:', provision);
-    // TODO: Implement edit dialog
+    const dialogRef = this.dialog.open(ProvisionFormDialogComponent, {
+      width: '800px',
+      data: { provision, mode: 'edit' }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'update') {
+        this.updateProvision(provision.id, result.data);
+      }
+    });
   }
 
+  private updateProvision(id: string, updateData: UpdateProvisionDto) {
+    this.provisionsService.updateProvision(id, updateData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Provision updated successfully', 'Close', {
+            duration: 3000
+          });
+          this.loadProvisions();
+        },
+        error: (error) => {
+          console.error('Error updating provision:', error);
+          this.snackBar.open('Failed to update provision', 'Close', {
+            duration: 3000
+          });
+        }
+      });
+  }
+
+  
+
   assignAuditor(provision: Provision) {
+    // TODO: Implement auditor assignment dialog
     console.log('Assign auditor to:', provision);
-    // TODO: Implement assign auditor dialog
+    this.snackBar.open('Auditor assignment feature coming soon', 'Close', {
+      duration: 3000
+    });
   }
 
   deleteProvision(provision: Provision) {
@@ -328,5 +370,39 @@ export class ProvisionsManagementComponent implements OnInit, OnDestroy {
 
   get failedCount(): number {
     return this.provisions.filter(p => p.status === ProvisionStatus.FAILED).length;
+  }
+
+  // Add this method inside the ProvisionsManagementComponent class
+  createNewProvision() {
+    const dialogRef = this.dialog.open(ProvisionFormDialogComponent, {
+      width: '800px',
+      data: { mode: 'create' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'create') {
+        this.createProvision(result.data);
+      }
+    });
+  }
+
+  // Also add this helper method
+  private createProvision(createData: CreateProvisionDto) {
+    this.provisionsService.createProvision(createData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Provision created successfully', 'Close', {
+            duration: 3000
+          });
+          this.loadProvisions();
+        },
+        error: (error) => {
+          console.error('Error creating provision:', error);
+          this.snackBar.open('Failed to create provision', 'Close', {
+            duration: 3000
+          });
+        }
+      });
   }
 }

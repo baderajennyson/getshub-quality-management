@@ -1,4 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+// src/app/shared/components/enhanced-data-table/enhanced-data-table.ts
+
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -11,10 +13,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';  // ADD THIS
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
-import { ColumnConfig, TableConfig, TableAction } from '../../models/data-table.interface';
-import { MatTooltipModule } from '@angular/material/tooltip';  // ← ADD THIS LINE
+import { ColumnConfig, TableConfig, TableAction, ColumnVisibility } from '../../models/data-table.interface';  // ADD ColumnVisibility
 
 @Component({
   selector: 'app-enhanced-data-table',
@@ -32,31 +35,40 @@ import { MatTooltipModule } from '@angular/material/tooltip';  // ← ADD THIS L
     MatChipsModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-    MatTooltipModule  // ← ADD THIS LINE
+    MatTooltipModule,
+    MatMenuModule  // ADD THIS
   ],
   templateUrl: './enhanced-data-table.html',
   styleUrls: ['./enhanced-data-table.scss']
 })
-export class EnhancedDataTableComponent implements OnInit {
+export class EnhancedDataTableComponent implements OnInit, OnChanges {
   @Input() data: any[] = [];
   @Input() config!: TableConfig;
   @Input() actions: TableAction[] = [];
   @Input() loading = false;
   @Input() totalCount = 0;
+  @Input() initialColumnVisibility?: ColumnVisibility;
 
   @Output() pageChange = new EventEmitter<{page: number, pageSize: number}>();
   @Output() sortChange = new EventEmitter<{column: string, direction: 'asc' | 'desc'}>();
   @Output() selectionChange = new EventEmitter<any[]>();
   @Output() searchChange = new EventEmitter<string>();
   @Output() actionClick = new EventEmitter<{action: string, row: any}>();
+  @Output() columnVisibilityChange = new EventEmitter<ColumnVisibility>();
 
   dataSource = new MatTableDataSource<any>([]);
   selection = new SelectionModel<any>(true, []);
   displayedColumns: string[] = [];
   searchValue = '';
+  
+  // ADD THESE PROPERTIES INSIDE THE CLASS
+  columnVisibility: ColumnVisibility = {};
+  showColumnMenu = false;
+  private searchTimeout: any;
 
   ngOnInit() {
     this.setupTable();
+    this.initializeColumnVisibility();
   }
 
   ngOnChanges() {
@@ -64,6 +76,7 @@ export class EnhancedDataTableComponent implements OnInit {
     this.setupTable();
   }
 
+  // UPDATED: Only add visible columns
   private setupTable() {
     this.displayedColumns = [];
     
@@ -71,16 +84,23 @@ export class EnhancedDataTableComponent implements OnInit {
       this.displayedColumns.push('select');
     }
     
-    this.displayedColumns.push(...this.config.columns.map(col => col.key));
+    // Only add visible columns
+    const visibleColumns = this.getVisibleColumns();
+    this.displayedColumns.push(...visibleColumns.map(col => col.key));
     
     if (this.config.showActions && this.actions.length > 0) {
       this.displayedColumns.push('actions');
     }
   }
 
+  // UPDATED: Add debounced search
   onSearch(event: any) {
     this.searchValue = event.target.value;
-    this.searchChange.emit(this.searchValue);
+    // Debounce search to avoid too many API calls
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.searchChange.emit(this.searchValue);
+    }, 300);
   }
 
   onSort(event: any) {
@@ -135,5 +155,27 @@ export class EnhancedDataTableComponent implements OnInit {
       'BACKJOB': 'status-backjob'
     };
     return statusClasses[status] || 'status-default';
+  }
+
+  // NEW COLUMN VISIBILITY METHODS
+  private initializeColumnVisibility() {
+    this.columnVisibility = {};
+    this.config.columns.forEach(column => {
+      this.columnVisibility[column.key] = this.initialColumnVisibility?.[column.key] ?? true;
+    });
+  }
+
+  getVisibleColumns(): ColumnConfig[] {
+    return this.config.columns.filter(column => this.columnVisibility[column.key]);
+  }
+
+  toggleColumn(columnKey: string) {
+    this.columnVisibility[columnKey] = !this.columnVisibility[columnKey];
+    this.setupTable();
+    this.columnVisibilityChange.emit(this.columnVisibility);
+  }
+
+  toggleColumnMenu() {
+    this.showColumnMenu = !this.showColumnMenu;
   }
 }

@@ -18,6 +18,14 @@
         </div>
         
         <div class="action-buttons">
+          <!-- Add Create button -->
+          <button mat-raised-button 
+                  color="primary"
+                  (click)="createNewProvision()">
+            <mat-icon>add</mat-icon>
+            Create Provision
+          </button>
+          
           <button mat-raised-button 
                   color="accent"
                   (click)="uploadProvisions()">

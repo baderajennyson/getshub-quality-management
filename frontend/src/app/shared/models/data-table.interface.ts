@@ -21,6 +21,7 @@ export interface ColumnConfig {
     showFilters?: boolean;
     showSelection?: boolean;
     showActions?: boolean;
+    showColumnControls?: boolean;
     striped?: boolean;
     bordered?: boolean;
     hoverable?: boolean;
@@ -37,4 +38,19 @@ export interface ColumnConfig {
     disabled?: (row: any) => boolean;
     visible?: (row: any) => boolean;
     action: (row: any) => void;
+  }
+
+  // ADD THESE NEW INTERFACES - Copy and paste this code
+  export interface ColumnVisibility {
+    [key: string]: boolean;
+  }
+
+  export interface TableState {
+    page: number;
+    pageSize: number;
+    sort: { column: string; direction: 'asc' | 'desc' }[];
+    filters: { [key: string]: any };
+    globalSearch: string;
+    selectedRows: any[];
+    columnVisibility: ColumnVisibility;
   }
