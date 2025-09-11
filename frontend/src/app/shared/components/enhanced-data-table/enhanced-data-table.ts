@@ -1,5 +1,4 @@
 // src/app/shared/components/enhanced-data-table/enhanced-data-table.ts
-
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
@@ -14,10 +13,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatMenuModule } from '@angular/material/menu';  // ADD THIS
+import { MatMenuModule } from '@angular/material/menu';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
-import { ColumnConfig, TableConfig, TableAction, ColumnVisibility } from '../../models/data-table.interface';  // ADD ColumnVisibility
+import { ColumnConfig, TableConfig, TableAction, ColumnVisibility } from '../../models/data-table.interface';
 
 @Component({
   selector: 'app-enhanced-data-table',
@@ -36,7 +35,7 @@ import { ColumnConfig, TableConfig, TableAction, ColumnVisibility } from '../../
     MatSelectModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatMenuModule  // ADD THIS
+    MatMenuModule
   ],
   templateUrl: './enhanced-data-table.html',
   styleUrls: ['./enhanced-data-table.scss']
@@ -48,23 +47,50 @@ export class EnhancedDataTableComponent implements OnInit, OnChanges {
   @Input() loading = false;
   @Input() totalCount = 0;
   @Input() initialColumnVisibility?: ColumnVisibility;
-
+ 
   @Output() pageChange = new EventEmitter<{page: number, pageSize: number}>();
   @Output() sortChange = new EventEmitter<{column: string, direction: 'asc' | 'desc'}>();
   @Output() selectionChange = new EventEmitter<any[]>();
   @Output() searchChange = new EventEmitter<string>();
   @Output() actionClick = new EventEmitter<{action: string, row: any}>();
   @Output() columnVisibilityChange = new EventEmitter<ColumnVisibility>();
+  @Output() rowClick = new EventEmitter<any>(); // NEW: Row click event
 
   dataSource = new MatTableDataSource<any>([]);
   selection = new SelectionModel<any>(true, []);
   displayedColumns: string[] = [];
   searchValue = '';
   
-  // ADD THESE PROPERTIES INSIDE THE CLASS
   columnVisibility: ColumnVisibility = {};
   showColumnMenu = false;
   private searchTimeout: any;
+
+  // NEW: Column presets configuration
+  columnPresets = [
+    { 
+      key: 'basic', 
+      label: 'Basic', 
+      columns: ['requestNumber', 'customerName', 'location', 'status', 'createdAt'] 
+    },
+    { 
+      key: 'operational', 
+      label: 'Operational', 
+      columns: ['requestNumber', 'customerName', 'activityType', 'resource', 'status', 'assignedAuditor', 'createdAt'] 
+    },
+    { 
+      key: 'technical', 
+      label: 'Technical', 
+      columns: ['requestNumber', 'customerName', 'location', 'activityType', 'resource', 'status', 'assignedAuditor', 'createdAt', 'contactPhone'] 
+    }
+  ];
+
+  // NEW: Track which preset is currently active
+  activePreset = 'operational'; // Default to operational view
+
+  // NEW: Available columns for the column menu
+  get availableColumns() {
+    return this.config.columns || [];
+  }
 
   ngOnInit() {
     this.setupTable();
@@ -76,7 +102,6 @@ export class EnhancedDataTableComponent implements OnInit, OnChanges {
     this.setupTable();
   }
 
-  // UPDATED: Only add visible columns
   private setupTable() {
     this.displayedColumns = [];
     
@@ -93,7 +118,6 @@ export class EnhancedDataTableComponent implements OnInit, OnChanges {
     }
   }
 
-  // UPDATED: Add debounced search
   onSearch(event: any) {
     this.searchValue = event.target.value;
     // Debounce search to avoid too many API calls
@@ -157,7 +181,6 @@ export class EnhancedDataTableComponent implements OnInit, OnChanges {
     return statusClasses[status] || 'status-default';
   }
 
-  // NEW COLUMN VISIBILITY METHODS
   private initializeColumnVisibility() {
     this.columnVisibility = {};
     this.config.columns.forEach(column => {
@@ -169,13 +192,142 @@ export class EnhancedDataTableComponent implements OnInit, OnChanges {
     return this.config.columns.filter(column => this.columnVisibility[column.key]);
   }
 
-  toggleColumn(columnKey: string) {
-    this.columnVisibility[columnKey] = !this.columnVisibility[columnKey];
+  toggleColumn(columnKey: string, checked: boolean) {
+    this.columnVisibility[columnKey] = checked;
     this.setupTable();
     this.columnVisibilityChange.emit(this.columnVisibility);
   }
 
   toggleColumnMenu() {
     this.showColumnMenu = !this.showColumnMenu;
+  }
+
+  // NEW: Apply a column preset (Basic, Operational, or Technical view)
+  applyColumnPreset(presetKey: string) {
+    this.activePreset = presetKey;
+    const preset = this.columnPresets.find(p => p.key === presetKey);
+    
+    if (preset) {
+      // Reset all columns to hidden first
+      Object.keys(this.columnVisibility).forEach(key => {
+        this.columnVisibility[key] = false;
+      });
+      
+      // Show only the columns for this preset
+      preset.columns.forEach(columnKey => {
+        if (this.columnVisibility.hasOwnProperty(columnKey)) {
+          this.columnVisibility[columnKey] = true;
+        }
+      });
+      
+      // Update the table display
+      this.setupTable();
+      this.columnVisibilityChange.emit(this.columnVisibility);
+    }
+  }
+
+  // NEW: Handle row click events
+  onRowClick(row: any, event: Event) {
+    // Prevent row click if clicking on checkbox or buttons
+    const target = event.target as HTMLElement;
+    if (target.closest('mat-checkbox') || target.closest('button') || target.closest('mat-icon-button')) {
+      return;
+    }
+    
+    this.rowClick.emit(row);
+  }
+
+  // ===== TELECOMMUNICATIONS-SPECIFIC HELPER METHODS =====
+
+  getFullAddress(row: any): string {
+    if (!row) return '';
+    const parts = [
+      row.addressLine1,
+      row.barangay,
+      row.city,
+      row.province
+    ].filter(part => part && part.trim());
+    
+    return parts.join(', ');
+  }
+
+  getShortActivityType(activityType: string): string {
+    if (!activityType) return 'Not Set';
+    
+    // Remove common prefixes and shorten
+    let shortened = activityType
+      .replace('Inside - ', '')
+      .replace('Outside - ', '')
+      .substring(0, 20);
+      
+    // Add ellipsis if truncated
+    if (activityType.length > 20) {
+      shortened += '...';
+    }
+    
+    return shortened;
+  }
+
+  getStatusLabel(status: string): string {
+    if (!status) return 'Unknown';
+    
+    // Convert status to readable format
+    return status
+      .replace('_', ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    
+    try {
+      const date = new Date(dateString);
+      
+      // Check if date is valid
+      if (isNaN(date.getTime())) return '';
+      
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+      });
+    } catch (error) {
+      return '';
+    }
+  }
+
+  getCustomerName(row: any): string {
+    if (!row) return '';
+    const firstName = row.firstName || '';
+    const lastName = row.lastName || '';
+    return `${firstName} ${lastName}`.trim();
+  }
+
+  getLocation(row: any): string {
+    if (!row) return '';
+    const city = row.city || '';
+    const province = row.province || '';
+    return `${city}${city && province ? ', ' : ''}${province}`;
+  }
+
+  getAssignedAuditor(row: any): string {
+    if (!row?.assignedAuditor) return 'Unassigned';
+    const auditor = row.assignedAuditor;
+    return `${auditor.firstName || ''} ${auditor.lastName || ''}`.trim();
+  }
+
+  // Badge helpers
+  isManualRequest(row: any): boolean {
+    return !!row?.isManualRequestNumber;
+  }
+
+  getRequestBadgeText(row: any): string {
+    return this.isManualRequest(row) ? 'M' : 'A';
+  }
+
+  getRequestBadgeTooltip(row: any): string {
+    return this.isManualRequest(row) ? 'Manual Request Number' : 'Auto-Generated Request Number';
   }
 }

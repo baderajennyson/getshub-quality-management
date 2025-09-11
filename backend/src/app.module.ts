@@ -6,6 +6,10 @@ import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
 import { ProvisionsModule } from './provisions/provisions.module';
 
+// Import entities explicitly
+import { User } from './users/entities/user.entity';
+import { Provision } from './provisions/entities/provision.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,9 +22,10 @@ import { ProvisionsModule } from './provisions/provisions.module';
       username: process.env.DB_USERNAME || 'getshub_user',
       password: process.env.DB_PASSWORD || 'getshub_pass',
       database: process.env.DB_NAME || 'getshub_db',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false, // Back to working state
-      logging: false,
+      entities: [User, Provision], // Explicit entity imports
+      synchronize: true,
+      logging: true, // Enable logging to debug
+      dropSchema: false, // Don't drop existing schema
     }),
     AuthModule,
     UsersModule,

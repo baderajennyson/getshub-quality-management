@@ -45,44 +45,46 @@ export class ProvisionsManagementComponent implements OnInit, OnDestroy {
 
   // Table configuration
   tableConfig: TableConfig = {
+    showSelection: true,
+    showActions: true,
+    showPagination: true,
+    showSearch: true,
+    showColumnControls: true,
     columns: [
       {
         key: 'requestNumber',
         label: 'Request #',
         sortable: true,
-        width: '120px'
+        width: '140px'
       },
       {
-        key: 'customerName',
-        label: 'Customer Name',
+        key: 'customerName', 
+        label: 'Customer',
         sortable: true,
+        width: '180px'
+      },
+      {
+        key: 'location',
+        label: 'Location', 
+        sortable: false,
         width: '200px'
       },
       {
-        key: 'customerAddress',
-        label: 'Address',
-        sortable: false,
-        width: '250px'
-      },
-      {
-        key: 'provisionType',
-        label: 'Type',
+        key: 'activityType',
+        label: 'Activity',
         sortable: true,
-        width: '150px',
-        formatter: (value) => this.formatProvisionType(value)
+        width: '150px'
       },
       {
         key: 'status',
         label: 'Status',
-        type: 'status',
         sortable: true,
-        width: '140px',
-        formatter: (value) => this.formatStatus(value)
+        width: '120px',
+        type: 'status'
       },
       {
-        key: 'estimatedCost',
-        label: 'Est. Cost',
-        type: 'number',
+        key: 'resource',
+        label: 'Resource',
         sortable: true,
         width: '120px'
       },
@@ -90,29 +92,16 @@ export class ProvisionsManagementComponent implements OnInit, OnDestroy {
         key: 'assignedAuditor',
         label: 'Assigned To',
         sortable: false,
-        width: '150px',
-        formatter: (value) => value ? `${value.firstName} ${value.lastName}` : 'Unassigned'
+        width: '140px'
       },
       {
         key: 'createdAt',
         label: 'Created',
-        type: 'date',
         sortable: true,
-        width: '120px'
+        width: '100px',
+        type: 'date'
       }
-    ],
-    showSearch: true,
-    showSelection: true,
-    showPagination: true,
-    showActions: true,
-    showColumnControls: true,
-    pageSize: 10,
-    pageSizeOptions: [10, 25, 50, 100],
-    striped: true,
-    hoverable: true,
-    density: 'standard',
-    emptyStateText: 'No provisions found',
-    emptyStateIcon: 'assignment'
+    ]
   };
 
   // Table actions
