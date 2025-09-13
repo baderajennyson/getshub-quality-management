@@ -1,0 +1,57 @@
+.csv-import-dialog {
+  mat-dialog-content {
+    min-width: 600px;
+    max-width: 900px;
+  }
+
+  .upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .template-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #555;
+    }
+
+    .errors {
+      color: #c62828;
+      background: #ffebee;
+      border: 1px solid #ffcdd2;
+      padding: 8px 12px;
+      border-radius: 4px;
+
+      h4 {
+        margin: 0 0 6px 0;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+    }
+  }
+
+  .mapping-section {
+    margin-top: 16px;
+
+    .mapping-table {
+      width: 100%;
+
+      .map-field { width: 100%; }
+    }
+  }
+
+  .preview-section {
+    margin-top: 16px;
+
+    .preview-table { width: 100%; }
+  }
+}

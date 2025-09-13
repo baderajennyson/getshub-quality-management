@@ -1,85 +1,320 @@
 <!-- src/app/shared/dialogs/provision-form-dialog/provision-form-dialog.html -->
-
 <div class="provision-dialog">
   <h2 mat-dialog-title>{{ getTitle() }}</h2>
   
   <mat-dialog-content>
     <form [formGroup]="form" class="provision-form">
       
+      <!-- Identification -->
+      <div class="form-section">
+        <h3>Identification</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Request Number (optional)</mat-label>
+            <input matInput formControlName="requestNumber" placeholder="Auto-generated if empty">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Manual Request Number</mat-label>
+            <mat-select formControlName="isManualRequestNumber">
+              <mat-option [value]="true">Yes</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
       <!-- Customer Information -->
       <div class="form-section">
         <h3>Customer Information</h3>
-        
-        <mat-form-field appearance="outline">
-          <mat-label>Customer Name</mat-label>
-          <input matInput formControlName="customerName" required>
-          <mat-error *ngIf="form.get('customerName')?.hasError('required')">
-            Customer name is required
-          </mat-error>
-        </mat-form-field>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" required>
+          </mat-form-field>
+        </div>
 
         <mat-form-field appearance="outline">
-          <mat-label>Customer Address</mat-label>
-          <textarea matInput formControlName="customerAddress" rows="3" required></textarea>
-          <mat-error *ngIf="form.get('customerAddress')?.hasError('required')">
-            Customer address is required
-          </mat-error>
+          <mat-label>Address Line 1</mat-label>
+          <textarea matInput formControlName="addressLine1" rows="2" required></textarea>
         </mat-form-field>
 
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Contact Number</mat-label>
-            <input matInput formControlName="contactNumber" required>
-            <mat-error *ngIf="form.get('contactNumber')?.hasError('required')">
-              Contact number is required
-            </mat-error>
+            <mat-label>Province</mat-label>
+            <mat-select formControlName="province" required>
+              <mat-option *ngFor="let p of provinces" [value]="p.code">{{ p.name }}</mat-option>
+            </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email">
-            <mat-error *ngIf="form.get('email')?.hasError('email')">
-              Please enter a valid email
-            </mat-error>
+            <mat-label>City / Municipality</mat-label>
+            <mat-select formControlName="city" required>
+              <mat-option *ngFor="let c of cities" [value]="c.code">{{ c.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Barangay</mat-label>
+            <mat-select formControlName="barangay" required>
+              <mat-option *ngFor="let b of barangays" [value]="b.code">{{ b.name }}</mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Landmark</mat-label>
+            <input matInput formControlName="landmark">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contact Phone</mat-label>
+            <input matInput formControlName="contactPhone">
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Account Number</mat-label>
+          <input matInput formControlName="accountNumber" type="number">
+        </mat-form-field>
       </div>
 
       <!-- Provision Details -->
       <div class="form-section">
         <h3>Provision Details</h3>
-        
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Provision Type</mat-label>
-            <mat-select formControlName="provisionType" required>
-              <mat-option *ngFor="let type of provisionTypes" [value]="type">
-                {{ formatProvisionType(type) }}
-              </mat-option>
+            <mat-label>Resource</mat-label>
+            <input matInput formControlName="resource" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="datePicker" formControlName="date" required>
+            <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Dispatch</mat-label>
+            <mat-select formControlName="prDispatch">
+              <mat-option *ngFor="let d of prDispatches" [value]="d">{{ d }}</mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Estimated Cost</mat-label>
-            <input matInput type="number" formControlName="estimatedCost">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let s of (['PENDING_ASSIGNMENT','AUDIT_ASSIGNED','AUDIT_IN_PROGRESS','AUDIT_COMPLETED','PASSED','FAILED','BACKJOB','COMPLETED','CANCELLED','SUSPENDED'])" [value]="s">{{ s }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Activity Type</mat-label>
+            <mat-select formControlName="activityType">
+              <mat-option *ngFor="let a of activityTypes" [value]="a">{{ a }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Verification Type</mat-label>
+            <input matInput formControlName="verificationType">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Activity Lane</mat-label>
+            <input matInput formControlName="activityLane">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Activity Grouping</mat-label>
+            <input matInput formControlName="activityGrouping">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Activity Classification</mat-label>
+            <input matInput formControlName="activityClassification">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Activity Status</mat-label>
+            <input matInput formControlName="activityStatus">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Position In Route</mat-label>
+            <input matInput type="number" formControlName="positionInRoute">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Service Information -->
+      <div class="form-section">
+        <h3>Service Information</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Market Segment</mat-label>
+            <mat-select formControlName="marketSegment">
+              <mat-option *ngFor="let m of marketSegments" [value]="m">{{ m }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Zone</mat-label>
+            <input matInput formControlName="zone">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Exchange</mat-label>
+            <input matInput formControlName="exchange">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Node Location</mat-label>
+            <input matInput formControlName="nodeLocation">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Cabinet Location</mat-label>
+            <input matInput formControlName="cabinetLocation">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Modem Ownership</mat-label>
+            <input matInput formControlName="modemOwnership">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Priority</mat-label>
+            <input matInput formControlName="priority">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Home Service Device</mat-label>
+            <input matInput formControlName="homeServiceDevice">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Package Type</mat-label>
+            <input matInput formControlName="packageType">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>NE Type</mat-label>
+            <mat-select formControlName="neType">
+              <mat-option *ngFor="let n of neTypes" [value]="n">{{ n }}</mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3"></textarea>
+          <mat-label>Complaint Type</mat-label>
+          <input matInput formControlName="complaintType">
         </mat-form-field>
+      </div>
 
+      <!-- Timing -->
+      <div class="form-section">
+        <h3>Timing</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Date Created</mat-label>
+            <input matInput [matDatepicker]="dc" formControlName="dateCreated">
+            <mat-datepicker-toggle matSuffix [for]="dc"></mat-datepicker-toggle>
+            <mat-datepicker #dc></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Date Extracted</mat-label>
+            <input matInput [matDatepicker]="de" formControlName="dateExtracted">
+            <mat-datepicker-toggle matSuffix [for]="de"></mat-datepicker-toggle>
+            <mat-datepicker #de></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Started Date Time</mat-label>
+            <input matInput [matDatepicker]="sd" formControlName="startedDateTime">
+            <mat-datepicker-toggle matSuffix [for]="sd"></mat-datepicker-toggle>
+            <mat-datepicker #sd></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Completion Date Time</mat-label>
+            <input matInput [matDatepicker]="cd" formControlName="completionDateTime">
+            <mat-datepicker-toggle matSuffix [for]="cd"></mat-datepicker-toggle>
+            <mat-datepicker #cd></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Start</mat-label>
+            <input matInput formControlName="start">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>End</mat-label>
+            <input matInput formControlName="end">
+          </mat-form-field>
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>SAWA</mat-label>
+            <input matInput formControlName="sawa">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Tandem Outside Status</mat-label>
+            <input matInput formControlName="tandemOutsideStatus">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Remarks & Quality -->
+      <div class="form-section">
+        <h3>Quality & Remarks</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Assigned Auditor ID</mat-label>
+            <input matInput formControlName="assignedAuditorId">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Quality Score</mat-label>
+            <input matInput type="number" formControlName="qualityScore">
+          </mat-form-field>
+        </div>
         <mat-form-field appearance="outline">
-          <mat-label>Technical Requirements</mat-label>
-          <textarea matInput formControlName="technicalRequirements" rows="3"></textarea>
+          <mat-label>Audit Notes</mat-label>
+          <textarea matInput rows="2" formControlName="auditNotes"></textarea>
         </mat-form-field>
-
         <mat-form-field appearance="outline">
-          <mat-label>Requested Completion Date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="requestedCompletionDate">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <mat-label>Audit Photos (URLs/JSON)</mat-label>
+          <textarea matInput rows="2" formControlName="auditPhotos"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Manager Notes</mat-label>
+          <textarea matInput rows="2" formControlName="managerNotes"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Remarks</mat-label>
+          <textarea matInput rows="2" formControlName="remarks"></textarea>
+        </mat-form-field>
+      </div>
+
+      <!-- Extended Data -->
+      <div class="form-section">
+        <h3>Extended Data</h3>
+        <mat-form-field appearance="outline">
+          <mat-label>Extended Data (JSON)</mat-label>
+          <textarea matInput rows="3" formControlName="extendedData" placeholder='{"customField":"value"}'></textarea>
         </mat-form-field>
       </div>
       
@@ -92,7 +327,7 @@
     </button>
     <button mat-raised-button 
             color="primary" 
-            (click)="onSubmit()"
+            (click)="onSubmit()" 
             [disabled]="form.invalid"
             *ngIf="!isViewMode">
       {{ isEditMode ? 'Update' : 'Create' }}

@@ -1,0 +1,569 @@
+[
+  {
+    "code": "012800000",
+    "name": "Province 012800000",
+    "regionCode": "010000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0102801001"
+  },
+  {
+    "code": "012900000",
+    "name": "Province 012900000",
+    "regionCode": "010000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0102901001"
+  },
+  {
+    "code": "013300000",
+    "name": "Province 013300000",
+    "regionCode": "010000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0103301001"
+  },
+  {
+    "code": "015500000",
+    "name": "Province 015500000",
+    "regionCode": "010000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0105501001"
+  },
+  {
+    "code": "020900000",
+    "name": "Province 020900000",
+    "regionCode": "020000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0200901001"
+  },
+  {
+    "code": "021500000",
+    "name": "Province 021500000",
+    "regionCode": "020000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0201501001"
+  },
+  {
+    "code": "023100000",
+    "name": "Province 023100000",
+    "regionCode": "020000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0203101001"
+  },
+  {
+    "code": "025000000",
+    "name": "Province 025000000",
+    "regionCode": "020000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0205001001"
+  },
+  {
+    "code": "025700000",
+    "name": "Province 025700000",
+    "regionCode": "020000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0205701001"
+  },
+  {
+    "code": "030800000",
+    "name": "Province 030800000",
+    "regionCode": "030000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0300801001"
+  },
+  {
+    "code": "031400000",
+    "name": "Province 031400000",
+    "regionCode": "030000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0301401001"
+  },
+  {
+    "code": "034900000",
+    "name": "Province 034900000",
+    "regionCode": "030000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0304901003"
+  },
+  {
+    "code": "035400000",
+    "name": "Province 035400000",
+    "regionCode": "030000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0330100001"
+  },
+  {
+    "code": "036900000",
+    "name": "Province 036900000",
+    "regionCode": "030000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0306901001"
+  },
+  {
+    "code": "037100000",
+    "name": "Province 037100000",
+    "regionCode": "030000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0307101001"
+  },
+  {
+    "code": "037700000",
+    "name": "Province 037700000",
+    "regionCode": "030000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0307701001"
+  },
+  {
+    "code": "041000000",
+    "name": "Province 041000000",
+    "regionCode": "040000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0401001001"
+  },
+  {
+    "code": "042100000",
+    "name": "Province 042100000",
+    "regionCode": "040000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0402101001"
+  },
+  {
+    "code": "043400000",
+    "name": "Province 043400000",
+    "regionCode": "040000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0403401001"
+  },
+  {
+    "code": "045600000",
+    "name": "Province 045600000",
+    "regionCode": "040000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0405601001"
+  },
+  {
+    "code": "045800000",
+    "name": "Province 045800000",
+    "regionCode": "040000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0405801001"
+  },
+  {
+    "code": "174000000",
+    "name": "Province 174000000",
+    "regionCode": "170000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1704001001"
+  },
+  {
+    "code": "175100000",
+    "name": "Province 175100000",
+    "regionCode": "170000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1705101001"
+  },
+  {
+    "code": "175200000",
+    "name": "Province 175200000",
+    "regionCode": "170000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1705201001"
+  },
+  {
+    "code": "175300000",
+    "name": "Province 175300000",
+    "regionCode": "170000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1705301001"
+  },
+  {
+    "code": "175900000",
+    "name": "Province 175900000",
+    "regionCode": "170000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1705901001"
+  },
+  {
+    "code": "050500000",
+    "name": "Province 050500000",
+    "regionCode": "050000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0500501001"
+  },
+  {
+    "code": "051600000",
+    "name": "Province 051600000",
+    "regionCode": "050000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0501601001"
+  },
+  {
+    "code": "051700000",
+    "name": "Province 051700000",
+    "regionCode": "050000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0501701001"
+  },
+  {
+    "code": "052000000",
+    "name": "Province 052000000",
+    "regionCode": "050000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0502001001"
+  },
+  {
+    "code": "054100000",
+    "name": "Province 054100000",
+    "regionCode": "050000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0504101001"
+  },
+  {
+    "code": "056200000",
+    "name": "Province 056200000",
+    "regionCode": "050000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "0506202002"
+  },
+  {
+    "code": "060400000",
+    "name": "Province 060400000",
+    "regionCode": "060000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0600401001"
+  },
+  {
+    "code": "060600000",
+    "name": "Province 060600000",
+    "regionCode": "060000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0600601001"
+  },
+  {
+    "code": "061900000",
+    "name": "Province 061900000",
+    "regionCode": "060000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0601901001"
+  },
+  {
+    "code": "063000000",
+    "name": "Province 063000000",
+    "regionCode": "060000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0603001001"
+  },
+  {
+    "code": "064500000",
+    "name": "Province 064500000",
+    "regionCode": "060000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0630200001"
+  },
+  {
+    "code": "067900000",
+    "name": "Province 067900000",
+    "regionCode": "060000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0607901001"
+  },
+  {
+    "code": "071200000",
+    "name": "Province 071200000",
+    "regionCode": "070000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0701201001"
+  },
+  {
+    "code": "072200000",
+    "name": "Province 072200000",
+    "regionCode": "070000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0702201001"
+  },
+  {
+    "code": "074600000",
+    "name": "Province 074600000",
+    "regionCode": "070000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0704601001"
+  },
+  {
+    "code": "076100000",
+    "name": "Province 076100000",
+    "regionCode": "070000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0706101001"
+  },
+  {
+    "code": "082600000",
+    "name": "Province 082600000",
+    "regionCode": "080000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0802601001"
+  },
+  {
+    "code": "083700000",
+    "name": "Province 083700000",
+    "regionCode": "080000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0803701001"
+  },
+  {
+    "code": "084800000",
+    "name": "Province 084800000",
+    "regionCode": "080000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0804801001"
+  },
+  {
+    "code": "086000000",
+    "name": "Province 086000000",
+    "regionCode": "080000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0806001001"
+  },
+  {
+    "code": "086400000",
+    "name": "Province 086400000",
+    "regionCode": "080000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0806401001"
+  },
+  {
+    "code": "087800000",
+    "name": "Province 087800000",
+    "regionCode": "080000000",
+    "islandGroupCode": "visayas",
+    "psgc10DigitCode": "0807801001"
+  },
+  {
+    "code": "097200000",
+    "name": "Province 097200000",
+    "regionCode": "090000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "0907201001"
+  },
+  {
+    "code": "097300000",
+    "name": "Province 097300000",
+    "regionCode": "090000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "0907302001"
+  },
+  {
+    "code": "098300000",
+    "name": "Province 098300000",
+    "regionCode": "090000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "0908301001"
+  },
+  {
+    "code": "101300000",
+    "name": "Province 101300000",
+    "regionCode": "100000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1001301001"
+  },
+  {
+    "code": "101800000",
+    "name": "Province 101800000",
+    "regionCode": "100000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1001801001"
+  },
+  {
+    "code": "103500000",
+    "name": "Province 103500000",
+    "regionCode": "100000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1003501001"
+  },
+  {
+    "code": "104200000",
+    "name": "Province 104200000",
+    "regionCode": "100000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1004201001"
+  },
+  {
+    "code": "104300000",
+    "name": "Province 104300000",
+    "regionCode": "100000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1004301001"
+  },
+  {
+    "code": "112300000",
+    "name": "Province 112300000",
+    "regionCode": "110000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1102301004"
+  },
+  {
+    "code": "112400000",
+    "name": "Province 112400000",
+    "regionCode": "110000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1102401001"
+  },
+  {
+    "code": "112500000",
+    "name": "Province 112500000",
+    "regionCode": "110000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1102501001"
+  },
+  {
+    "code": "118200000",
+    "name": "Province 118200000",
+    "regionCode": "110000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1108201001"
+  },
+  {
+    "code": "118600000",
+    "name": "Province 118600000",
+    "regionCode": "110000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1108601001"
+  },
+  {
+    "code": "124700000",
+    "name": "Province 124700000",
+    "regionCode": "120000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1204701001"
+  },
+  {
+    "code": "126300000",
+    "name": "Province 126300000",
+    "regionCode": "120000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1206302002"
+  },
+  {
+    "code": "126500000",
+    "name": "Province 126500000",
+    "regionCode": "120000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1206501001"
+  },
+  {
+    "code": "128000000",
+    "name": "Province 128000000",
+    "regionCode": "120000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1208001001"
+  },
+  {
+    "code": "140100000",
+    "name": "Province 140100000",
+    "regionCode": "140000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1400101001"
+  },
+  {
+    "code": "141100000",
+    "name": "Province 141100000",
+    "regionCode": "140000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1401101001"
+  },
+  {
+    "code": "142700000",
+    "name": "Province 142700000",
+    "regionCode": "140000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1402701001"
+  },
+  {
+    "code": "143200000",
+    "name": "Province 143200000",
+    "regionCode": "140000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1403201001"
+  },
+  {
+    "code": "144400000",
+    "name": "Province 144400000",
+    "regionCode": "140000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1404401001"
+  },
+  {
+    "code": "148100000",
+    "name": "Province 148100000",
+    "regionCode": "140000000",
+    "islandGroupCode": "luzon",
+    "psgc10DigitCode": "1408101001"
+  },
+  {
+    "code": "160200000",
+    "name": "Province 160200000",
+    "regionCode": "160000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1600201001"
+  },
+  {
+    "code": "160300000",
+    "name": "Province 160300000",
+    "regionCode": "160000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1600301001"
+  },
+  {
+    "code": "166700000",
+    "name": "Province 166700000",
+    "regionCode": "160000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1606701001"
+  },
+  {
+    "code": "166800000",
+    "name": "Province 166800000",
+    "regionCode": "160000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1606801001"
+  },
+  {
+    "code": "168500000",
+    "name": "Province 168500000",
+    "regionCode": "160000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1608501002"
+  },
+  {
+    "code": "150700000",
+    "name": "Province 150700000",
+    "regionCode": "150000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1900702001"
+  },
+  {
+    "code": "153600000",
+    "name": "Province 153600000",
+    "regionCode": "150000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1903601001"
+  },
+  {
+    "code": "153800000",
+    "name": "Province 153800000",
+    "regionCode": "150000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1903801004"
+  },
+  {
+    "code": "156600000",
+    "name": "Province 156600000",
+    "regionCode": "150000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1906601001"
+  },
+  {
+    "code": "157000000",
+    "name": "Province 157000000",
+    "regionCode": "150000000",
+    "islandGroupCode": "mindanao",
+    "psgc10DigitCode": "1907001001"
+  }
+]

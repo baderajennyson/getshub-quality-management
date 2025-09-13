@@ -12,45 +12,246 @@
     </div>
     
     <div class="controls-section">
-      <!-- NEW: Column Presets Section -->
+      <!-- View Mode Indicator -->
       <div class="preset-section">
-        <span class="preset-label">View:</span>
+        <span class="preset-label">Current View:</span>
         <button mat-button 
-                *ngFor="let preset of columnPresets" 
-                [class.active]="activePreset === preset.key"
-                (click)="applyColumnPreset(preset.key)"
+                [class.active]="activePreset === 'quickview'"
+                (click)="applyColumnPreset('quickview')"
                 class="preset-btn">
-          {{preset.label}}
+          Quick View
+        </button>
+        <button mat-button 
+                [class.active]="activePreset === 'custom'"
+                class="preset-btn custom-btn"
+                disabled>
+          Custom
         </button>
       </div>
     
-      <!-- EXISTING: Column Visibility Controls -->
-      <div class="column-controls" *ngIf="config.showColumnControls">
+      <!-- Column Management Controls -->
+      <div class="column-controls">
+        <!-- Basic Column Toggle (existing functionality) -->
         <button mat-icon-button [matMenuTriggerFor]="columnMenu" class="column-toggle-btn">
           <mat-icon>view_column</mat-icon>
         </button>
         
         <mat-menu #columnMenu="matMenu" class="column-menu">
           <div class="column-menu-header">
-            <h4>Show/Hide Columns</h4>
+            <h4>Quick Column Toggle</h4>
           </div>
           <div class="column-menu-content">
             <mat-checkbox 
-              *ngFor="let column of availableColumns" 
+              *ngFor="let column of allAvailableColumns.slice(0, 8)" 
               [checked]="columnVisibility[column.key]"
               (change)="toggleColumn(column.key, $event.checked)"
               class="column-checkbox">
               {{column.label}}
             </mat-checkbox>
+            <div class="menu-footer">
+              <button mat-button (click)="openAdvancedColumnPanel()" class="advanced-btn">
+                <mat-icon>tune</mat-icon>
+                Advanced Columns ({{allAvailableColumns.length}} total)
+              </button>
+            </div>
           </div>
         </mat-menu>
+    
+        <!-- Enterprise Advanced Column Button -->
+        <button mat-button (click)="openAdvancedColumnPanel()" class="advanced-column-btn">
+          <mat-icon>tune</mat-icon>
+          Columns ({{getVisibleColumns().length}}/{{allAvailableColumns.length}})
+        </button>
+        
+        <!-- Column Reorder Button -->
+        <button mat-button (click)="openColumnReorderPanel()" class="reorder-column-btn" 
+                [disabled]="getVisibleColumns().length < 2"
+                matTooltip="Drag and drop to reorder columns">
+          <mat-icon>drag_handle</mat-icon>
+          Reorder
+        </button>
       </div>
       
+      <!-- Bulk Actions (existing) -->
       <div class="bulk-actions-section">
         <button mat-raised-button color="primary" *ngIf="selection.selected.length > 0">
           <mat-icon>assignment</mat-icon>
           Bulk Assign ({{selection.selected.length}})
         </button>
+      </div>
+    </div>
+    
+    <!-- ENTERPRISE ADVANCED COLUMN MANAGEMENT PANEL -->
+    <div class="advanced-column-overlay" *ngIf="showAdvancedColumnPanel">
+      <div class="advanced-column-panel">
+        
+        <!-- Panel Header -->
+        <div class="panel-header">
+          <div class="header-content">
+            <mat-icon class="header-icon">view_column</mat-icon>
+            <div class="header-text">
+              <h2>Column Management</h2>
+              <p>Customize your table view • {{getVisibleColumns().length}} of {{allAvailableColumns.length}} columns visible</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeAdvancedColumnPanel()" class="close-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <!-- Panel Content -->
+        <div class="panel-content">
+          
+          <!-- Reset to Quick View -->
+          <div class="preset-actions">
+            <h3>Reset Options</h3>
+            <div class="preset-buttons">
+              <button mat-stroked-button 
+                      (click)="applyColumnPreset('quickview')"
+                      [class.active]="activePreset === 'quickview'">
+                <mat-icon>view_agenda</mat-icon>
+                Quick View (Default)
+              </button>
+            </div>
+          </div>
+
+          <!-- Column Categories -->
+          <div class="column-categories">
+            <div class="category-section" *ngFor="let category of columnCategories">
+              
+              <!-- Category Header -->
+              <div class="category-header">
+                <mat-icon class="category-icon">{{category.icon}}</mat-icon>
+                <div class="category-info">
+                  <h4>{{category.name}}</h4>
+                  <p>{{category.description}}</p>
+                </div>
+                <div class="category-summary">
+                  {{getCategoryVisibleCount(category)}}/{{category.columns.length}} visible
+                </div>
+                <button mat-stroked-button (click)="selectAllInCategory(category, true)" class="expand-btn">
+                  Select All
+                </button>
+                <button mat-stroked-button (click)="selectAllInCategory(category, false)" class="expand-btn">
+                  Deselect All
+                </button>
+                <button mat-icon-button 
+                        (click)="toggleCategoryExpansion(category.name)"
+                        class="expand-btn">
+                  <mat-icon>{{isCategoryExpanded(category.name) ? 'expand_less' : 'expand_more'}}</mat-icon>
+                </button>
+              </div>
+
+              <!-- Category Columns (Expandable) -->
+              <div class="category-columns" *ngIf="isCategoryExpanded(category.name)">
+                <div class="column-item" *ngFor="let column of category.columns">
+                  <mat-checkbox 
+                    [checked]="getTempColumnVisibility(column.key)"
+                    (change)="previewColumnChange(column.key, $event.checked)">
+                  </mat-checkbox>
+                  <div class="column-info">
+                    <span class="column-label">{{column.label}}</span>
+                    <span class="column-description">{{column.description}}</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Panel Actions -->
+        <div class="panel-actions">
+          <div class="action-left">
+            <button mat-button (click)="resetToDefaults()" class="reset-btn">
+              <mat-icon>refresh</mat-icon>
+              Reset to Defaults
+            </button>
+            <button mat-button (click)="selectAllColumns(true)" class="reset-btn">
+              <mat-icon>select_all</mat-icon>
+              Select All Columns
+            </button>
+            <button mat-button (click)="selectAllColumns(false)" class="reset-btn">
+              <mat-icon>backspace</mat-icon>
+              Deselect All Columns
+            </button>
+            <span class="changes-indicator" *ngIf="hasUnsavedChanges()">
+              <mat-icon>circle</mat-icon>
+              Unsaved changes
+            </span>
+          </div>
+          <div class="action-right">
+            <button mat-button (click)="cancelColumnChanges()">
+              Cancel
+            </button>
+            <button mat-raised-button color="primary" (click)="applyColumnChanges()">
+              <mat-icon>save</mat-icon>
+              Save Columns
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+    <!-- COLUMN REORDERING PANEL -->
+    <div class="column-reorder-overlay" *ngIf="showColumnReorderPanel">
+      <div class="column-reorder-panel">
+        
+        <!-- Panel Header -->
+        <div class="panel-header">
+          <div class="header-content">
+            <mat-icon class="header-icon">drag_handle</mat-icon>
+            <div class="header-text">
+              <h2>Column Order</h2>
+              <p>Drag and drop columns to reorder • {{getVisibleColumns().length}} columns</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeColumnReorderPanel()" class="close-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <!-- Panel Content -->
+        <div class="panel-content">
+          <div class="reorder-instructions">
+            <mat-icon>info</mat-icon>
+            <p>Drag columns to change their order in the table. Changes are saved automatically.</p>
+          </div>
+          
+          <div class="column-reorder-list" cdkDropList (cdkDropListDropped)="onColumnReorder($any($event))">
+            <div class="column-reorder-item" 
+                 *ngFor="let column of getReorderableColumns(); let i = index"
+                 cdkDrag>
+              <div class="column-drag-handle" cdkDragHandle>
+                <mat-icon>drag_indicator</mat-icon>
+              </div>
+              <div class="column-info">
+                <span class="column-label">{{column.label}}</span>
+                <span class="column-key">{{column.key}}</span>
+              </div>
+              <div class="column-position">{{i + 1}}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel Actions -->
+        <div class="panel-actions">
+          <div class="action-left">
+            <button mat-button (click)="resetColumnOrder()" class="reset-btn">
+              <mat-icon>refresh</mat-icon>
+              Reset Order
+            </button>
+          </div>
+          <div class="action-right">
+            <button mat-raised-button color="primary" (click)="closeColumnReorderPanel()">
+              <mat-icon>check</mat-icon>
+              Done
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -109,13 +310,38 @@
           
           <!-- Customer Name Column (Combined) -->
           <span *ngIf="column.key === 'customerName'">
-            {{row.firstName}} {{row.lastName}}
+            {{getCustomerName(row)}}
+          </span>
+          
+          <!-- First Name Column -->
+          <span *ngIf="column.key === 'firstName'">
+            {{row.firstName}}
+          </span>
+          
+          <!-- Last Name Column -->
+          <span *ngIf="column.key === 'lastName'">
+            {{row.lastName}}
           </span>
           
           <!-- Location Column with Tooltip -->
           <span *ngIf="column.key === 'location'" 
                 [matTooltip]="getFullAddress(row)">
-            {{row.city}}, {{row.province}}
+            {{getLocation(row)}}
+          </span>
+          
+          <!-- Province Column -->
+          <span *ngIf="column.key === 'province'">
+            {{row.province}}
+          </span>
+          
+          <!-- City Column -->
+          <span *ngIf="column.key === 'city'">
+            {{row.city}}
+          </span>
+          
+          <!-- Resource Column -->
+          <span *ngIf="column.key === 'resource'">
+            {{row.resource}}
           </span>
           
           <!-- Activity Type Column with Tooltip -->
@@ -151,7 +377,7 @@
           </span>
           
           <!-- Default Text Column -->
-          <span *ngIf="!column.type || (column.type === 'text' && column.key !== 'requestNumber' && column.key !== 'customerName' && column.key !== 'location' && column.key !== 'activityType' && column.key !== 'assignedAuditor')">
+          <span *ngIf="column.key !== 'requestNumber' && column.key !== 'customerName' && column.key !== 'firstName' && column.key !== 'lastName' && column.key !== 'location' && column.key !== 'province' && column.key !== 'city' && column.key !== 'resource' && column.key !== 'activityType' && column.key !== 'assignedAuditor' && column.key !== 'status' && column.key !== 'createdAt' && column.type !== 'date' && column.type !== 'status' && column.type !== 'number'">
             {{ getColumnValue(row, column) }}
           </span>
           
