@@ -42,7 +42,7 @@ export class UsersService {
 
   async findAuditors(): Promise<User[]> {
     return this.usersRepository.find({
-      where: { role: UserRole.QA_AUDITOR, isActive: true }
+      where: { role: UserRole.QA_AUDITOR, isActive: true },
     });
   }
 }

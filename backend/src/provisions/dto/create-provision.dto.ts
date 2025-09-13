@@ -1,22 +1,22 @@
-import { 
-  IsString, 
-  IsNotEmpty, 
-  IsOptional, 
-  IsEnum, 
-  IsNumber, 
-  IsDateString, 
-  IsBoolean, 
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsEnum,
+  IsNumber,
+  IsDateString,
+  IsBoolean,
   IsObject,
   IsInt,
   Min,
-  Max
+  Max,
 } from 'class-validator';
-import { 
-  ActivityType, 
-  MarketSegment, 
-  NEType, 
+import {
+  ActivityType,
+  MarketSegment,
+  NEType,
   PRDispatch,
-  ProvisionStatus 
+  ProvisionStatus,
 } from '../entities/provision.entity';
 
 export class CreateProvisionDto {

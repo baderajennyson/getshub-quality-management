@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Provision, ProvisionStatus } from './entities/provision.entity';
@@ -15,14 +20,17 @@ export class ProvisionsService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(createProvisionDto: CreateProvisionDto, uploadedById: string): Promise<Provision> {
+  async create(
+    createProvisionDto: CreateProvisionDto,
+    uploadedById: string,
+  ): Promise<Provision> {
     let requestNumber: string;
     let isManualRequestNumber = false;
 
     // Check if manual request number provided
     if (createProvisionDto.requestNumber?.trim()) {
       const trimmedRequestNumber = createProvisionDto.requestNumber.trim();
-      
+
       // Validate manual request number format
       if (!this.isValidRequestNumberFormat(trimmedRequestNumber)) {
         throw new BadRequestException('Invalid request number format.');
@@ -30,11 +38,13 @@ export class ProvisionsService {
 
       // Check if manual request number already exists
       const existingProvision = await this.provisionsRepository.findOne({
-        where: { requestNumber: trimmedRequestNumber }
+        where: { requestNumber: trimmedRequestNumber },
       });
 
       if (existingProvision) {
-        throw new ConflictException(`Request number "${trimmedRequestNumber}" already exists.`);
+        throw new ConflictException(
+          `Request number "${trimmedRequestNumber}" already exists.`,
+        );
       }
 
       requestNumber = trimmedRequestNumber;
@@ -47,12 +57,12 @@ export class ProvisionsService {
 
     // Create provision entity instance
     const provision = new Provision();
-    
+
     // Set required fields
     provision.requestNumber = requestNumber;
     provision.isManualRequestNumber = isManualRequestNumber;
     provision.uploadedById = uploadedById;
-    
+
     // Customer information (required fields)
     provision.firstName = createProvisionDto.firstName;
     provision.lastName = createProvisionDto.lastName;
@@ -60,39 +70,63 @@ export class ProvisionsService {
     provision.province = createProvisionDto.province;
     provision.city = createProvisionDto.city;
     provision.barangay = createProvisionDto.barangay;
-    
+
     // Customer information (optional fields)
-    if (createProvisionDto.landmark !== undefined) provision.landmark = createProvisionDto.landmark;
-    if (createProvisionDto.contactPhone !== undefined) provision.contactPhone = createProvisionDto.contactPhone;
-    if (createProvisionDto.accountNumber !== undefined) provision.accountNumber = createProvisionDto.accountNumber;
+    if (createProvisionDto.landmark !== undefined)
+      provision.landmark = createProvisionDto.landmark;
+    if (createProvisionDto.contactPhone !== undefined)
+      provision.contactPhone = createProvisionDto.contactPhone;
+    if (createProvisionDto.accountNumber !== undefined)
+      provision.accountNumber = createProvisionDto.accountNumber;
 
     // Dispatch & Activity (required fields)
     provision.resource = createProvisionDto.resource;
     provision.date = new Date(createProvisionDto.date);
-    provision.status = createProvisionDto.status || ProvisionStatus.PENDING_ASSIGNMENT;
-    
+    provision.status =
+      createProvisionDto.status || ProvisionStatus.PENDING_ASSIGNMENT;
+
     // Dispatch & Activity (optional fields)
-    if (createProvisionDto.prDispatch !== undefined) provision.prDispatch = createProvisionDto.prDispatch;
-    if (createProvisionDto.activityType !== undefined) provision.activityType = createProvisionDto.activityType;
-    if (createProvisionDto.verificationType !== undefined) provision.verificationType = createProvisionDto.verificationType;
-    if (createProvisionDto.activityLane !== undefined) provision.activityLane = createProvisionDto.activityLane;
-    if (createProvisionDto.activityGrouping !== undefined) provision.activityGrouping = createProvisionDto.activityGrouping;
-    if (createProvisionDto.activityClassification !== undefined) provision.activityClassification = createProvisionDto.activityClassification;
-    if (createProvisionDto.activityStatus !== undefined) provision.activityStatus = createProvisionDto.activityStatus;
-    if (createProvisionDto.positionInRoute !== undefined) provision.positionInRoute = createProvisionDto.positionInRoute;
+    if (createProvisionDto.prDispatch !== undefined)
+      provision.prDispatch = createProvisionDto.prDispatch;
+    if (createProvisionDto.activityType !== undefined)
+      provision.activityType = createProvisionDto.activityType;
+    if (createProvisionDto.verificationType !== undefined)
+      provision.verificationType = createProvisionDto.verificationType;
+    if (createProvisionDto.activityLane !== undefined)
+      provision.activityLane = createProvisionDto.activityLane;
+    if (createProvisionDto.activityGrouping !== undefined)
+      provision.activityGrouping = createProvisionDto.activityGrouping;
+    if (createProvisionDto.activityClassification !== undefined)
+      provision.activityClassification =
+        createProvisionDto.activityClassification;
+    if (createProvisionDto.activityStatus !== undefined)
+      provision.activityStatus = createProvisionDto.activityStatus;
+    if (createProvisionDto.positionInRoute !== undefined)
+      provision.positionInRoute = createProvisionDto.positionInRoute;
 
     // Service information (all optional)
-    if (createProvisionDto.marketSegment !== undefined) provision.marketSegment = createProvisionDto.marketSegment;
-    if (createProvisionDto.zone !== undefined) provision.zone = createProvisionDto.zone;
-    if (createProvisionDto.exchange !== undefined) provision.exchange = createProvisionDto.exchange;
-    if (createProvisionDto.nodeLocation !== undefined) provision.nodeLocation = createProvisionDto.nodeLocation;
-    if (createProvisionDto.cabinetLocation !== undefined) provision.cabinetLocation = createProvisionDto.cabinetLocation;
-    if (createProvisionDto.modemOwnership !== undefined) provision.modemOwnership = createProvisionDto.modemOwnership;
-    if (createProvisionDto.priority !== undefined) provision.priority = createProvisionDto.priority;
-    if (createProvisionDto.homeServiceDevice !== undefined) provision.homeServiceDevice = createProvisionDto.homeServiceDevice;
-    if (createProvisionDto.packageType !== undefined) provision.packageType = createProvisionDto.packageType;
-    if (createProvisionDto.neType !== undefined) provision.neType = createProvisionDto.neType;
-    if (createProvisionDto.complaintType !== undefined) provision.complaintType = createProvisionDto.complaintType;
+    if (createProvisionDto.marketSegment !== undefined)
+      provision.marketSegment = createProvisionDto.marketSegment;
+    if (createProvisionDto.zone !== undefined)
+      provision.zone = createProvisionDto.zone;
+    if (createProvisionDto.exchange !== undefined)
+      provision.exchange = createProvisionDto.exchange;
+    if (createProvisionDto.nodeLocation !== undefined)
+      provision.nodeLocation = createProvisionDto.nodeLocation;
+    if (createProvisionDto.cabinetLocation !== undefined)
+      provision.cabinetLocation = createProvisionDto.cabinetLocation;
+    if (createProvisionDto.modemOwnership !== undefined)
+      provision.modemOwnership = createProvisionDto.modemOwnership;
+    if (createProvisionDto.priority !== undefined)
+      provision.priority = createProvisionDto.priority;
+    if (createProvisionDto.homeServiceDevice !== undefined)
+      provision.homeServiceDevice = createProvisionDto.homeServiceDevice;
+    if (createProvisionDto.packageType !== undefined)
+      provision.packageType = createProvisionDto.packageType;
+    if (createProvisionDto.neType !== undefined)
+      provision.neType = createProvisionDto.neType;
+    if (createProvisionDto.complaintType !== undefined)
+      provision.complaintType = createProvisionDto.complaintType;
 
     // Timing information
     if (createProvisionDto.dateCreated) {
@@ -100,23 +134,42 @@ export class ProvisionsService {
     } else {
       provision.dateCreated = new Date();
     }
-    if (createProvisionDto.dateExtracted !== undefined) provision.dateExtracted = createProvisionDto.dateExtracted ? new Date(createProvisionDto.dateExtracted) : undefined;
-    if (createProvisionDto.startedDateTime !== undefined) provision.startedDateTime = createProvisionDto.startedDateTime ? new Date(createProvisionDto.startedDateTime) : undefined;
-    if (createProvisionDto.completionDateTime !== undefined) provision.completionDateTime = createProvisionDto.completionDateTime ? new Date(createProvisionDto.completionDateTime) : undefined;
-    if (createProvisionDto.start !== undefined) provision.start = createProvisionDto.start;
-    if (createProvisionDto.end !== undefined) provision.end = createProvisionDto.end;
-    if (createProvisionDto.sawa !== undefined) provision.sawa = createProvisionDto.sawa;
-    if (createProvisionDto.tandemOutsideStatus !== undefined) provision.tandemOutsideStatus = createProvisionDto.tandemOutsideStatus;
+    if (createProvisionDto.dateExtracted !== undefined)
+      provision.dateExtracted = createProvisionDto.dateExtracted
+        ? new Date(createProvisionDto.dateExtracted)
+        : undefined;
+    if (createProvisionDto.startedDateTime !== undefined)
+      provision.startedDateTime = createProvisionDto.startedDateTime
+        ? new Date(createProvisionDto.startedDateTime)
+        : undefined;
+    if (createProvisionDto.completionDateTime !== undefined)
+      provision.completionDateTime = createProvisionDto.completionDateTime
+        ? new Date(createProvisionDto.completionDateTime)
+        : undefined;
+    if (createProvisionDto.start !== undefined)
+      provision.start = createProvisionDto.start;
+    if (createProvisionDto.end !== undefined)
+      provision.end = createProvisionDto.end;
+    if (createProvisionDto.sawa !== undefined)
+      provision.sawa = createProvisionDto.sawa;
+    if (createProvisionDto.tandemOutsideStatus !== undefined)
+      provision.tandemOutsideStatus = createProvisionDto.tandemOutsideStatus;
 
     // Quality management
-    if (createProvisionDto.assignedAuditorId !== undefined) provision.assignedAuditorId = createProvisionDto.assignedAuditorId;
-    if (createProvisionDto.auditNotes !== undefined) provision.auditNotes = createProvisionDto.auditNotes;
-    if (createProvisionDto.auditPhotos !== undefined) provision.auditPhotos = createProvisionDto.auditPhotos;
-    if (createProvisionDto.qualityScore !== undefined) provision.qualityScore = createProvisionDto.qualityScore;
+    if (createProvisionDto.assignedAuditorId !== undefined)
+      provision.assignedAuditorId = createProvisionDto.assignedAuditorId;
+    if (createProvisionDto.auditNotes !== undefined)
+      provision.auditNotes = createProvisionDto.auditNotes;
+    if (createProvisionDto.auditPhotos !== undefined)
+      provision.auditPhotos = createProvisionDto.auditPhotos;
+    if (createProvisionDto.qualityScore !== undefined)
+      provision.qualityScore = createProvisionDto.qualityScore;
 
     // Remarks & notes
-    if (createProvisionDto.remarks !== undefined) provision.remarks = createProvisionDto.remarks;
-    if (createProvisionDto.managerNotes !== undefined) provision.managerNotes = createProvisionDto.managerNotes;
+    if (createProvisionDto.remarks !== undefined)
+      provision.remarks = createProvisionDto.remarks;
+    if (createProvisionDto.managerNotes !== undefined)
+      provision.managerNotes = createProvisionDto.managerNotes;
 
     // Extended data
     provision.extendedData = createProvisionDto.extendedData || {};
@@ -125,10 +178,10 @@ export class ProvisionsService {
   }
 
   async findAll(
-    page: number = 1, 
-    limit: number = 10, 
+    page: number = 1,
+    limit: number = 10,
     status?: ProvisionStatus,
-    search?: string
+    search?: string,
   ): Promise<{
     provisions: Provision[];
     total: number;
@@ -149,7 +202,8 @@ export class ProvisionsService {
     // Search functionality
     if (search?.trim()) {
       const searchTerm = `%${search.trim()}%`;
-      queryBuilder.andWhere(`(
+      queryBuilder.andWhere(
+        `(
         provision.requestNumber ILIKE :search OR
         provision.firstName ILIKE :search OR
         provision.lastName ILIKE :search OR
@@ -160,7 +214,9 @@ export class ProvisionsService {
         provision.resource ILIKE :search OR
         CAST(provision.accountNumber AS TEXT) ILIKE :search OR
         provision.contactPhone ILIKE :search
-      )`, { search: searchTerm });
+      )`,
+        { search: searchTerm },
+      );
     }
 
     queryBuilder
@@ -175,14 +231,142 @@ export class ProvisionsService {
       total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit)
+      totalPages: Math.ceil(total / limit),
     };
+  }
+
+  // Lightweight search for typeahead/autocomplete
+  async quickSearch(search: string, limit: number = 10): Promise<Provision[]> {
+    const qb = this.provisionsRepository
+      .createQueryBuilder('provision')
+      .leftJoinAndSelect('provision.uploadedBy', 'uploadedBy')
+      .leftJoinAndSelect('provision.assignedAuditor', 'assignedAuditor')
+      .orderBy('provision.createdAt', 'DESC')
+      .take(limit);
+
+    if (search?.trim()) {
+      const term = `%${search.trim()}%`;
+      qb.where(
+        `(
+        provision.requestNumber ILIKE :term OR
+        provision.firstName ILIKE :term OR
+        provision.lastName ILIKE :term OR
+        provision.addressLine1 ILIKE :term OR
+        provision.province ILIKE :term OR
+        provision.city ILIKE :term OR
+        provision.barangay ILIKE :term OR
+        provision.resource ILIKE :term OR
+        CAST(provision.accountNumber AS TEXT) ILIKE :term OR
+        provision.contactPhone ILIKE :term
+      )`,
+        { term },
+      );
+    }
+
+    return qb.getMany();
+  }
+
+  // Export provisions data as CSV only (as requested)
+  async exportProvisionsAsCSV(): Promise<{ buffer: Buffer; mimeType: string; filename: string }> {
+    const provisions = await this.provisionsRepository
+      .createQueryBuilder('provision')
+      .leftJoinAndSelect('provision.uploadedBy', 'uploadedBy')
+      .leftJoinAndSelect('provision.assignedAuditor', 'assignedAuditor')
+      .orderBy('provision.createdAt', 'DESC')
+      .getMany();
+
+    // Define column order covering all entity fields
+    const columns: Array<{ key: keyof Provision | string; header: string }> = [
+      { key: 'id', header: 'id' },
+      { key: 'requestNumber', header: 'requestNumber' },
+      { key: 'isManualRequestNumber', header: 'isManualRequestNumber' },
+      { key: 'firstName', header: 'firstName' },
+      { key: 'lastName', header: 'lastName' },
+      { key: 'addressLine1', header: 'addressLine1' },
+      { key: 'province', header: 'province' },
+      { key: 'city', header: 'city' },
+      { key: 'barangay', header: 'barangay' },
+      { key: 'landmark', header: 'landmark' },
+      { key: 'contactPhone', header: 'contactPhone' },
+      { key: 'accountNumber', header: 'accountNumber' },
+      { key: 'resource', header: 'resource' },
+      { key: 'date', header: 'date' },
+      { key: 'prDispatch', header: 'prDispatch' },
+      { key: 'status', header: 'status' },
+      { key: 'activityType', header: 'activityType' },
+      { key: 'verificationType', header: 'verificationType' },
+      { key: 'activityLane', header: 'activityLane' },
+      { key: 'activityGrouping', header: 'activityGrouping' },
+      { key: 'activityClassification', header: 'activityClassification' },
+      { key: 'activityStatus', header: 'activityStatus' },
+      { key: 'positionInRoute', header: 'positionInRoute' },
+      { key: 'marketSegment', header: 'marketSegment' },
+      { key: 'zone', header: 'zone' },
+      { key: 'exchange', header: 'exchange' },
+      { key: 'nodeLocation', header: 'nodeLocation' },
+      { key: 'cabinetLocation', header: 'cabinetLocation' },
+      { key: 'modemOwnership', header: 'modemOwnership' },
+      { key: 'priority', header: 'priority' },
+      { key: 'homeServiceDevice', header: 'homeServiceDevice' },
+      { key: 'packageType', header: 'packageType' },
+      { key: 'neType', header: 'neType' },
+      { key: 'complaintType', header: 'complaintType' },
+      { key: 'dateCreated', header: 'dateCreated' },
+      { key: 'dateExtracted', header: 'dateExtracted' },
+      { key: 'startedDateTime', header: 'startedDateTime' },
+      { key: 'completionDateTime', header: 'completionDateTime' },
+      { key: 'start', header: 'start' },
+      { key: 'end', header: 'end' },
+      { key: 'sawa', header: 'sawa' },
+      { key: 'tandemOutsideStatus', header: 'tandemOutsideStatus' },
+      { key: 'assignedAuditorId', header: 'assignedAuditorId' },
+      { key: 'uploadedById', header: 'uploadedById' },
+      { key: 'auditNotes', header: 'auditNotes' },
+      { key: 'auditPhotos', header: 'auditPhotos' },
+      { key: 'qualityScore', header: 'qualityScore' },
+      { key: 'remarks', header: 'remarks' },
+      { key: 'managerNotes', header: 'managerNotes' },
+      { key: 'extendedData', header: 'extendedData' },
+      { key: 'createdAt', header: 'createdAt' },
+      { key: 'updatedAt', header: 'updatedAt' },
+    ];
+
+    const escapeCsv = (value: any): string => {
+      if (value === null || value === undefined) return '';
+      if (value instanceof Date) return value.toISOString();
+      if (typeof value === 'object')
+        return JSON.stringify(value).replace(/\n/g, ' ');
+      const str = String(value);
+      if (/[",\n]/.test(str)) {
+        return '"' + str.replace(/"/g, '""') + '"';
+      }
+      return str;
+    };
+
+    const headerRow = columns.map((c) => c.header).join(',');
+    const rows = provisions.map((p) =>
+      columns
+        .map((c) => {
+          const key = c.key as keyof Provision;
+          // @ts-ignore dynamic access
+          const value = p[key];
+          return escapeCsv(value);
+        })
+        .join(','),
+    );
+
+    const csv = [headerRow, ...rows].join('\n');
+
+    const mimeType = 'text/csv; charset=utf-8';
+    const filename = `provisions-export-${new Date().toISOString().slice(0, 10)}.csv`;
+
+    return { buffer: Buffer.from(csv, 'utf8'), mimeType, filename };
   }
 
   async findOne(id: string): Promise<Provision> {
     const provision = await this.provisionsRepository.findOne({
       where: { id },
-      relations: ['uploadedBy', 'assignedAuditor']
+      relations: ['uploadedBy', 'assignedAuditor'],
     });
 
     if (!provision) {
@@ -195,34 +379,41 @@ export class ProvisionsService {
   async findByRequestNumber(requestNumber: string): Promise<Provision> {
     const provision = await this.provisionsRepository.findOne({
       where: { requestNumber },
-      relations: ['uploadedBy', 'assignedAuditor']
+      relations: ['uploadedBy', 'assignedAuditor'],
     });
 
     if (!provision) {
-      throw new NotFoundException(`Provision with request number ${requestNumber} not found`);
+      throw new NotFoundException(
+        `Provision with request number ${requestNumber} not found`,
+      );
     }
 
     return provision;
   }
 
-  async update(id: string, updateProvisionDto: UpdateProvisionDto): Promise<Provision> {
+  async update(
+    id: string,
+    updateProvisionDto: UpdateProvisionDto,
+  ): Promise<Provision> {
     const provision = await this.findOne(id);
 
     // Handle manual request number updates
     if (updateProvisionDto.requestNumber?.trim()) {
       const trimmedRequestNumber = updateProvisionDto.requestNumber.trim();
-      
+
       if (trimmedRequestNumber !== provision.requestNumber) {
         if (!this.isValidRequestNumberFormat(trimmedRequestNumber)) {
           throw new BadRequestException('Invalid request number format.');
         }
 
         const existingProvision = await this.provisionsRepository.findOne({
-          where: { requestNumber: trimmedRequestNumber }
+          where: { requestNumber: trimmedRequestNumber },
         });
 
         if (existingProvision) {
-          throw new ConflictException(`Request number "${trimmedRequestNumber}" already exists.`);
+          throw new ConflictException(
+            `Request number "${trimmedRequestNumber}" already exists.`,
+          );
         }
 
         provision.requestNumber = trimmedRequestNumber;
@@ -233,7 +424,7 @@ export class ProvisionsService {
     // If assigning an auditor
     if (updateProvisionDto.assignedAuditorId) {
       const auditor = await this.usersRepository.findOne({
-        where: { id: updateProvisionDto.assignedAuditorId }
+        where: { id: updateProvisionDto.assignedAuditorId },
       });
 
       if (!auditor) {
@@ -241,7 +432,9 @@ export class ProvisionsService {
       }
 
       if (auditor.role !== 'QA_AUDITOR') {
-        throw new BadRequestException('Assigned user must have QA_AUDITOR role');
+        throw new BadRequestException(
+          'Assigned user must have QA_AUDITOR role',
+        );
       }
 
       provision.status = ProvisionStatus.AUDIT_ASSIGNED;
@@ -249,46 +442,87 @@ export class ProvisionsService {
     }
 
     // Update all other fields if provided
-    if (updateProvisionDto.firstName !== undefined) provision.firstName = updateProvisionDto.firstName;
-    if (updateProvisionDto.lastName !== undefined) provision.lastName = updateProvisionDto.lastName;
-    if (updateProvisionDto.addressLine1 !== undefined) provision.addressLine1 = updateProvisionDto.addressLine1;
-    if (updateProvisionDto.province !== undefined) provision.province = updateProvisionDto.province;
-    if (updateProvisionDto.city !== undefined) provision.city = updateProvisionDto.city;
-    if (updateProvisionDto.barangay !== undefined) provision.barangay = updateProvisionDto.barangay;
-    if (updateProvisionDto.landmark !== undefined) provision.landmark = updateProvisionDto.landmark;
-    if (updateProvisionDto.contactPhone !== undefined) provision.contactPhone = updateProvisionDto.contactPhone;
-    if (updateProvisionDto.accountNumber !== undefined) provision.accountNumber = updateProvisionDto.accountNumber;
-    if (updateProvisionDto.resource !== undefined) provision.resource = updateProvisionDto.resource;
-    if (updateProvisionDto.prDispatch !== undefined) provision.prDispatch = updateProvisionDto.prDispatch;
-    if (updateProvisionDto.status !== undefined) provision.status = updateProvisionDto.status;
-    if (updateProvisionDto.activityType !== undefined) provision.activityType = updateProvisionDto.activityType;
-    if (updateProvisionDto.verificationType !== undefined) provision.verificationType = updateProvisionDto.verificationType;
-    if (updateProvisionDto.activityLane !== undefined) provision.activityLane = updateProvisionDto.activityLane;
-    if (updateProvisionDto.activityGrouping !== undefined) provision.activityGrouping = updateProvisionDto.activityGrouping;
-    if (updateProvisionDto.activityClassification !== undefined) provision.activityClassification = updateProvisionDto.activityClassification;
-    if (updateProvisionDto.activityStatus !== undefined) provision.activityStatus = updateProvisionDto.activityStatus;
-    if (updateProvisionDto.positionInRoute !== undefined) provision.positionInRoute = updateProvisionDto.positionInRoute;
-    if (updateProvisionDto.marketSegment !== undefined) provision.marketSegment = updateProvisionDto.marketSegment;
-    if (updateProvisionDto.zone !== undefined) provision.zone = updateProvisionDto.zone;
-    if (updateProvisionDto.exchange !== undefined) provision.exchange = updateProvisionDto.exchange;
-    if (updateProvisionDto.nodeLocation !== undefined) provision.nodeLocation = updateProvisionDto.nodeLocation;
-    if (updateProvisionDto.cabinetLocation !== undefined) provision.cabinetLocation = updateProvisionDto.cabinetLocation;
-    if (updateProvisionDto.modemOwnership !== undefined) provision.modemOwnership = updateProvisionDto.modemOwnership;
-    if (updateProvisionDto.priority !== undefined) provision.priority = updateProvisionDto.priority;
-    if (updateProvisionDto.homeServiceDevice !== undefined) provision.homeServiceDevice = updateProvisionDto.homeServiceDevice;
-    if (updateProvisionDto.packageType !== undefined) provision.packageType = updateProvisionDto.packageType;
-    if (updateProvisionDto.neType !== undefined) provision.neType = updateProvisionDto.neType;
-    if (updateProvisionDto.complaintType !== undefined) provision.complaintType = updateProvisionDto.complaintType;
-    if (updateProvisionDto.start !== undefined) provision.start = updateProvisionDto.start;
-    if (updateProvisionDto.end !== undefined) provision.end = updateProvisionDto.end;
-    if (updateProvisionDto.sawa !== undefined) provision.sawa = updateProvisionDto.sawa;
-    if (updateProvisionDto.tandemOutsideStatus !== undefined) provision.tandemOutsideStatus = updateProvisionDto.tandemOutsideStatus;
-    if (updateProvisionDto.auditNotes !== undefined) provision.auditNotes = updateProvisionDto.auditNotes;
-    if (updateProvisionDto.auditPhotos !== undefined) provision.auditPhotos = updateProvisionDto.auditPhotos;
-    if (updateProvisionDto.qualityScore !== undefined) provision.qualityScore = updateProvisionDto.qualityScore;
-    if (updateProvisionDto.remarks !== undefined) provision.remarks = updateProvisionDto.remarks;
-    if (updateProvisionDto.managerNotes !== undefined) provision.managerNotes = updateProvisionDto.managerNotes;
-    if (updateProvisionDto.extendedData !== undefined) provision.extendedData = updateProvisionDto.extendedData;
+    if (updateProvisionDto.firstName !== undefined)
+      provision.firstName = updateProvisionDto.firstName;
+    if (updateProvisionDto.lastName !== undefined)
+      provision.lastName = updateProvisionDto.lastName;
+    if (updateProvisionDto.addressLine1 !== undefined)
+      provision.addressLine1 = updateProvisionDto.addressLine1;
+    if (updateProvisionDto.province !== undefined)
+      provision.province = updateProvisionDto.province;
+    if (updateProvisionDto.city !== undefined)
+      provision.city = updateProvisionDto.city;
+    if (updateProvisionDto.barangay !== undefined)
+      provision.barangay = updateProvisionDto.barangay;
+    if (updateProvisionDto.landmark !== undefined)
+      provision.landmark = updateProvisionDto.landmark;
+    if (updateProvisionDto.contactPhone !== undefined)
+      provision.contactPhone = updateProvisionDto.contactPhone;
+    if (updateProvisionDto.accountNumber !== undefined)
+      provision.accountNumber = updateProvisionDto.accountNumber;
+    if (updateProvisionDto.resource !== undefined)
+      provision.resource = updateProvisionDto.resource;
+    if (updateProvisionDto.prDispatch !== undefined)
+      provision.prDispatch = updateProvisionDto.prDispatch;
+    if (updateProvisionDto.status !== undefined)
+      provision.status = updateProvisionDto.status;
+    if (updateProvisionDto.activityType !== undefined)
+      provision.activityType = updateProvisionDto.activityType;
+    if (updateProvisionDto.verificationType !== undefined)
+      provision.verificationType = updateProvisionDto.verificationType;
+    if (updateProvisionDto.activityLane !== undefined)
+      provision.activityLane = updateProvisionDto.activityLane;
+    if (updateProvisionDto.activityGrouping !== undefined)
+      provision.activityGrouping = updateProvisionDto.activityGrouping;
+    if (updateProvisionDto.activityClassification !== undefined)
+      provision.activityClassification =
+        updateProvisionDto.activityClassification;
+    if (updateProvisionDto.activityStatus !== undefined)
+      provision.activityStatus = updateProvisionDto.activityStatus;
+    if (updateProvisionDto.positionInRoute !== undefined)
+      provision.positionInRoute = updateProvisionDto.positionInRoute;
+    if (updateProvisionDto.marketSegment !== undefined)
+      provision.marketSegment = updateProvisionDto.marketSegment;
+    if (updateProvisionDto.zone !== undefined)
+      provision.zone = updateProvisionDto.zone;
+    if (updateProvisionDto.exchange !== undefined)
+      provision.exchange = updateProvisionDto.exchange;
+    if (updateProvisionDto.nodeLocation !== undefined)
+      provision.nodeLocation = updateProvisionDto.nodeLocation;
+    if (updateProvisionDto.cabinetLocation !== undefined)
+      provision.cabinetLocation = updateProvisionDto.cabinetLocation;
+    if (updateProvisionDto.modemOwnership !== undefined)
+      provision.modemOwnership = updateProvisionDto.modemOwnership;
+    if (updateProvisionDto.priority !== undefined)
+      provision.priority = updateProvisionDto.priority;
+    if (updateProvisionDto.homeServiceDevice !== undefined)
+      provision.homeServiceDevice = updateProvisionDto.homeServiceDevice;
+    if (updateProvisionDto.packageType !== undefined)
+      provision.packageType = updateProvisionDto.packageType;
+    if (updateProvisionDto.neType !== undefined)
+      provision.neType = updateProvisionDto.neType;
+    if (updateProvisionDto.complaintType !== undefined)
+      provision.complaintType = updateProvisionDto.complaintType;
+    if (updateProvisionDto.start !== undefined)
+      provision.start = updateProvisionDto.start;
+    if (updateProvisionDto.end !== undefined)
+      provision.end = updateProvisionDto.end;
+    if (updateProvisionDto.sawa !== undefined)
+      provision.sawa = updateProvisionDto.sawa;
+    if (updateProvisionDto.tandemOutsideStatus !== undefined)
+      provision.tandemOutsideStatus = updateProvisionDto.tandemOutsideStatus;
+    if (updateProvisionDto.auditNotes !== undefined)
+      provision.auditNotes = updateProvisionDto.auditNotes;
+    if (updateProvisionDto.auditPhotos !== undefined)
+      provision.auditPhotos = updateProvisionDto.auditPhotos;
+    if (updateProvisionDto.qualityScore !== undefined)
+      provision.qualityScore = updateProvisionDto.qualityScore;
+    if (updateProvisionDto.remarks !== undefined)
+      provision.remarks = updateProvisionDto.remarks;
+    if (updateProvisionDto.managerNotes !== undefined)
+      provision.managerNotes = updateProvisionDto.managerNotes;
+    if (updateProvisionDto.extendedData !== undefined)
+      provision.extendedData = updateProvisionDto.extendedData;
 
     // Handle date field updates
     if (updateProvisionDto.date) {
@@ -304,10 +538,14 @@ export class ProvisionsService {
       provision.startedDateTime = new Date(updateProvisionDto.startedDateTime);
     }
     if (updateProvisionDto.completionDateTime) {
-      provision.completionDateTime = new Date(updateProvisionDto.completionDateTime);
+      provision.completionDateTime = new Date(
+        updateProvisionDto.completionDateTime,
+      );
     }
     if (updateProvisionDto.actualCompletionDate) {
-      provision.completionDateTime = new Date(updateProvisionDto.actualCompletionDate);
+      provision.completionDateTime = new Date(
+        updateProvisionDto.actualCompletionDate,
+      );
     }
 
     return this.provisionsRepository.save(provision);
@@ -330,29 +568,29 @@ export class ProvisionsService {
     byActivityType: Record<string, number>;
   }> {
     const total = await this.provisionsRepository.count();
-    
+
     const pendingAssignment = await this.provisionsRepository.count({
-      where: { status: ProvisionStatus.PENDING_ASSIGNMENT }
+      where: { status: ProvisionStatus.PENDING_ASSIGNMENT },
     });
-    
+
     const auditAssigned = await this.provisionsRepository.count({
-      where: { status: ProvisionStatus.AUDIT_ASSIGNED }
+      where: { status: ProvisionStatus.AUDIT_ASSIGNED },
     });
-    
+
     const passed = await this.provisionsRepository.count({
-      where: { status: ProvisionStatus.PASSED }
+      where: { status: ProvisionStatus.PASSED },
     });
-    
+
     const failed = await this.provisionsRepository.count({
-      where: { status: ProvisionStatus.FAILED }
+      where: { status: ProvisionStatus.FAILED },
     });
-    
+
     const backjobs = await this.provisionsRepository.count({
-      where: { status: ProvisionStatus.BACKJOB }
+      where: { status: ProvisionStatus.BACKJOB },
     });
 
     const completed = await this.provisionsRepository.count({
-      where: { status: ProvisionStatus.COMPLETED }
+      where: { status: ProvisionStatus.COMPLETED },
     });
 
     // Market segment breakdown
@@ -390,20 +628,22 @@ export class ProvisionsService {
       backjobs,
       completed,
       byMarketSegment,
-      byActivityType
+      byActivityType,
     };
   }
 
   private async generateRequestNumber(): Promise<string> {
     const currentYear = new Date().getFullYear();
     const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0');
-    
+
     const latestProvision = await this.provisionsRepository
       .createQueryBuilder('provision')
-      .where('provision.requestNumber LIKE :pattern', { 
-        pattern: `REQ-${currentYear}${currentMonth}%` 
+      .where('provision.requestNumber LIKE :pattern', {
+        pattern: `REQ-${currentYear}${currentMonth}%`,
       })
-      .andWhere('provision.isManualRequestNumber = :isManual', { isManual: false })
+      .andWhere('provision.isManualRequestNumber = :isManual', {
+        isManual: false,
+      })
       .orderBy('provision.requestNumber', 'DESC')
       .getOne();
 
@@ -420,23 +660,26 @@ export class ProvisionsService {
   private isValidRequestNumberFormat(requestNumber: string): boolean {
     // Allow various formats - more flexible for manual entry
     const patterns = [
-      /^REQ-\d{6,12}$/,        // REQ-YYYYMM000001 (auto-generated)
+      /^REQ-\d{6,12}$/, // REQ-YYYYMM000001 (auto-generated)
       /^[A-Z]{2,10}-\d{1,12}$/, // MANUAL-001, TECH-123456, etc.
-      /^[A-Z0-9]{3,20}$/,      // ALPHANUMERIC codes without dash
-      /^[A-Z0-9-]{5,25}$/      // Any combination with dashes
+      /^[A-Z0-9]{3,20}$/, // ALPHANUMERIC codes without dash
+      /^[A-Z0-9-]{5,25}$/, // Any combination with dashes
     ];
-  
-    return patterns.some(pattern => pattern.test(requestNumber.trim()));
+
+    return patterns.some((pattern) => pattern.test(requestNumber.trim()));
   }
 
   async isRequestNumberExists(requestNumber: string): Promise<boolean> {
     const count = await this.provisionsRepository.count({
-      where: { requestNumber: requestNumber.trim() }
+      where: { requestNumber: requestNumber.trim() },
     });
     return count > 0;
   }
 
-  async bulkImport(provisionsData: CreateProvisionDto[], uploadedById: string): Promise<{
+  async bulkImport(
+    provisionsData: CreateProvisionDto[],
+    uploadedById: string,
+  ): Promise<{
     successful: number;
     failed: number;
     errors: string[];
@@ -444,7 +687,7 @@ export class ProvisionsService {
     const results = {
       successful: 0,
       failed: 0,
-      errors: [] as string[]
+      errors: [] as string[],
     };
 
     for (const [index, provisionData] of provisionsData.entries()) {
@@ -453,7 +696,9 @@ export class ProvisionsService {
         results.successful++;
       } catch (error: any) {
         results.failed++;
-        results.errors.push(`Row ${index + 1}: ${error?.message || 'Unknown error'}`);
+        results.errors.push(
+          `Row ${index + 1}: ${error?.message || 'Unknown error'}`,
+        );
       }
     }
 

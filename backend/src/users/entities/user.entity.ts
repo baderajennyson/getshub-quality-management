@@ -1,9 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export enum UserRole {
   SUPER_ADMIN = 'SUPER_ADMIN',
   MANAGER = 'MANAGER',
-  QA_AUDITOR = 'QA_AUDITOR'
+  QA_AUDITOR = 'QA_AUDITOR',
 }
 
 @Entity('users')

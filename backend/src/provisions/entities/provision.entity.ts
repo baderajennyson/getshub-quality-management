@@ -1,9 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Index,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 export enum ProvisionStatus {
   PENDING_ASSIGNMENT = 'PENDING_ASSIGNMENT',
-  AUDIT_ASSIGNED = 'AUDIT_ASSIGNED', 
+  AUDIT_ASSIGNED = 'AUDIT_ASSIGNED',
   AUDIT_IN_PROGRESS = 'AUDIT_IN_PROGRESS',
   AUDIT_COMPLETED = 'AUDIT_COMPLETED',
   PASSED = 'PASSED',
@@ -11,7 +20,7 @@ export enum ProvisionStatus {
   BACKJOB = 'BACKJOB',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
-  SUSPENDED = 'SUSPENDED'
+  SUSPENDED = 'SUSPENDED',
 }
 
 export enum ActivityType {
@@ -23,27 +32,27 @@ export enum ActivityType {
   SERVICE_UPGRADE = 'Inside - SERVICE UPGRADE',
   DISCONNECTION = 'Inside - DISCONNECTION',
   OUTSIDE_PLANT = 'Outside Plant Work',
-  MAINTENANCE = 'Maintenance'
+  MAINTENANCE = 'Maintenance',
 }
 
 export enum MarketSegment {
   RBG = 'RBG',
-  CBG = 'CBG', 
+  CBG = 'CBG',
   SME = 'SME',
-  ENTERPRISE = 'ENTERPRISE'
+  ENTERPRISE = 'ENTERPRISE',
 }
 
 export enum NEType {
   FTTX = 'FTTX',
   COPPER = 'COPPER',
-  FIBER = 'FIBER'
+  FIBER = 'FIBER',
 }
 
 export enum PRDispatch {
   SOD_OPEN_SO = 'SOD(OPEN S.O)',
   REGULAR_DISPATCH = 'REGULAR DISPATCH',
   EMERGENCY_DISPATCH = 'EMERGENCY DISPATCH',
-  SCHEDULED_DISPATCH = 'SCHEDULED DISPATCH'
+  SCHEDULED_DISPATCH = 'SCHEDULED DISPATCH',
 }
 
 @Entity('provisions')
@@ -101,21 +110,21 @@ export class Provision {
   @Column({
     type: 'enum',
     enum: PRDispatch,
-    nullable: true
+    nullable: true,
   })
   prDispatch?: PRDispatch;
 
   @Column({
     type: 'enum',
     enum: ProvisionStatus,
-    default: ProvisionStatus.PENDING_ASSIGNMENT
+    default: ProvisionStatus.PENDING_ASSIGNMENT,
   })
   status: ProvisionStatus;
 
   @Column({
     type: 'enum',
     enum: ActivityType,
-    nullable: true
+    nullable: true,
   })
   activityType?: ActivityType;
 
@@ -141,7 +150,7 @@ export class Provision {
   @Column({
     type: 'enum',
     enum: MarketSegment,
-    nullable: true
+    nullable: true,
   })
   marketSegment?: MarketSegment;
 
@@ -172,7 +181,7 @@ export class Provision {
   @Column({
     type: 'enum',
     enum: NEType,
-    nullable: true
+    nullable: true,
   })
   neType?: NEType;
 

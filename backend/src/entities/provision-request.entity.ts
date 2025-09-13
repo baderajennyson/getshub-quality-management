@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 
 export enum ProvisionStatus {
@@ -7,7 +16,7 @@ export enum ProvisionStatus {
   PASSED = 'PASSED',
   FAILED = 'FAILED',
   BACKJOB = 'BACKJOB',
-  CLOSED = 'CLOSED'
+  CLOSED = 'CLOSED',
 }
 
 @Entity('provision_requests')
@@ -51,7 +60,11 @@ export class ProvisionRequest {
   @Column({ nullable: true })
   contactPhone: string;
 
-  @Column({ type: 'enum', enum: ProvisionStatus, default: ProvisionStatus.PENDING_ASSIGNMENT })
+  @Column({
+    type: 'enum',
+    enum: ProvisionStatus,
+    default: ProvisionStatus.PENDING_ASSIGNMENT,
+  })
   status: ProvisionStatus;
 
   @Column({ type: 'decimal', nullable: true })

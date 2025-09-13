@@ -1,15 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Exclude } from 'class-transformer';
 
 export enum UserRole {
   SUPER_ADMIN = 'SUPER_ADMIN',
   MANAGER = 'MANAGER',
-  QA_AUDITOR = 'QA_AUDITOR'
+  QA_AUDITOR = 'QA_AUDITOR',
 }
 
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
-  DISABLED = 'DISABLED'
+  DISABLED = 'DISABLED',
 }
 
 @Entity('users')
